@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="@color/orange" /> <!-- Цвет выбранного состояния -->
+            <corners android:radius="50dp" /> <!-- Делаем кнопку круглой -->
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="@color/darkblue" /> <!-- Цвет невыбранного состояния -->
+            <corners android:radius="50dp" /> <!-- Делаем кнопку круглой -->
+        </shape>
+    </item>
+</selector>

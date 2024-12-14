@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TicketsActivity"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="40dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="0dp"
+                android:layout_marginTop="0dp">
+
+                <TextView
+                    android:id="@+id/header_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Вот что нам удалось найти..."
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkblue"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="← Назад"
+                android:textColor="@color/darkblue"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/errorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ошибка"
+                android:visibility="gone" />
+
+            <!-- Контейнер для билетов -->
+            <LinearLayout
+                android:id="@+id/ticketsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:background="@color/darkblue"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_favorites"
+            android:layout_width="24dp"
+            android:layout_height="39dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Избранное"
+            android:src="@drawable/ic_favotire" />
+
+        <ImageButton
+            android:id="@+id/button_main"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Главная"
+            android:src="@drawable/ic_main" />
+
+        <ImageButton
+            android:id="@+id/button_profile"
+            android:layout_width="24dp"
+            android:layout_height="42dp"
+            android:layout_marginRight="22dp"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Профиль"
+            android:src="@drawable/ic_profile" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

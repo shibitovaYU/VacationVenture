@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">VacationVenture</string>
+    <string name="api_key">lYnUdhPP2R9q23aGo3mA3f1PUQnflzB9</string>
+    <string name="restaurant_image">Изображение ресторана</string>
+    <string name="placeholder_text">Плейсхолдер для текста</string>
+    <string name="no_address">Адрес не указан</string>
+    <string name="no_rating">Нет рейтинга</string>
+    <string name="menu_not_available">Ссылка на меню не доступна</string>
+    <string name="no_description">Описание отсутствует</string>
+</resources>

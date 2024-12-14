@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/blue"
+    tools:context=".LogInActivity">
+
+<ScrollView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_gravity="center">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="319dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/jockey_one"
+        android:gravity="center"
+        android:text="VACATION VENTURE"
+        android:textColor="@android:color/white"
+        android:textSize="58sp" />
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:visibility="visible"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:background="@android:color/transparent"
+        android:minHeight="40dp"
+        android:text=""/>
+
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="60dp"
+        android:id="@+id/loginEmail"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/inform_border"
+        android:padding="8dp"
+        android:hint="Email"
+        android:drawableLeft="@drawable/baseline_email_24"
+        android:drawablePadding="8dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"/>
+
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="60dp"
+        android:id="@+id/loginPassword"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/inform_border"
+        android:padding="8dp"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        android:drawableLeft="@drawable/baseline_lock_24"
+        android:drawableRight="@drawable/ic_eye_off"
+        android:drawablePadding="8dp"
+        android:textColor="@color/grey"
+        android:paddingEnd="15dp"
+        android:textColorHint="@color/grey"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgot_password"
+        android:layout_gravity="center"
+        android:layout_marginTop="6dp"
+        android:padding="8dp"
+        android:text="Забыли пароль?"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="351dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/orange"
+        android:text="Войти"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signupRedirectText"
+        android:text="Еще не зарегестрированы? Присоединяйтесь!"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
+
+    <Button
+        android:id="@+id/login_vk_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="15dp"/>
+
+
+</LinearLayout>
+</ScrollView>
+</LinearLayout>

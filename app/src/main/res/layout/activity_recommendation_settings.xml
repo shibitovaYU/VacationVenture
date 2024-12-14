@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:id="@+id/header_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Расскажите, что вам нравится"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/darkblue"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="← Назад"
+            android:textColor="@color/darkblue"
+            android:textSize="16sp" />
+
+        <!-- Вопрос 1 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Какой вид отдыха вам больше нравится?"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"/>
+
+        <RadioGroup
+            android:id="@+id/question1_group"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Пляжный отдых"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Активный отдых (горные лыжи, треккинг)"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Культурный туризм (музеи, театры)"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Кулинарные путешествия"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"/>
+        </RadioGroup>
+
+        <!-- Вопрос 2 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Какую страну вы бы хотели посетить?"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"/>
+
+        <RadioGroup
+            android:id="@+id/question2_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"   android:text="Ночная жизнь и клубы"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"/>
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:text="Спортивные мероприятия" />
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:text="Концерты и фестивали" />
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:text="Природные экскурсии" />
+        </RadioGroup>
+
+        <!-- Вопрос 3 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Какой климат вы предпочитаете?"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"/>
+
+        <RadioGroup
+            android:id="@+id/question3_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton android:layout_width="wrap_content"             android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Теплый и солнечный" />
+            <RadioButton android:layout_width="wrap_content"             android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Умеренный" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Холодный и снежный" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Тропический" />
+        </RadioGroup>
+
+        <!-- Вопрос 4 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Какой тип проживания вам более комфортен?"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"/>
+
+        <RadioGroup
+            android:id="@+id/question4_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Отель" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Хостел" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Кемпинг" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content"  android:text="Аренда квартиры" />
+        </RadioGroup>
+
+        <!-- Вопрос 5 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Как вы предпочитаете проводить время на отдыхе?"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"/>
+
+        <RadioGroup
+            android:id="@+id/question5_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content" android:text="Исследуя новые места" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content" android:text="Расслабляясь на пляже" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content" android:text="Занимаясь спортом" />
+            <RadioButton android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:layout_height="wrap_content" android:text="Участвуя в культурных мероприятиях" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/submit_button"
+            android:text="Отправить"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/orange"
+            android:textSize="18sp"
+            android:layout_marginBottom="50dp"/>
+    </LinearLayout>
+</ScrollView>
+

@@ -1,0 +1,12 @@
+<resources>
+<string-array name="cuisines_array">
+    <item>Кухня - любая</item>
+    <item>Европейская кухня</item>
+    <item>Азиатская кухня</item>
+</string-array>
+    <string-array name="age_categories_array">
+        <item>Детская</item>
+        <item>Взрослая</item>
+        <item>Всем</item>
+    </string-array>
+    </resources>

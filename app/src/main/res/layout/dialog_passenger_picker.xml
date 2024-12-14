@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey"
+    android:background="@color/white">
+
+    <!-- Взрослые -->
+    <LinearLayout
+        android:layout_width="168dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical"> <!-- Отступ между блоками -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Взрослые"
+            android:textSize="18sp"
+            android:gravity="center"/>
+
+        <NumberPicker
+            android:id="@+id/numberPickerAdults"
+            android:layout_width="match_parent"
+            android:layout_height="167dp" />
+    </LinearLayout>
+
+    <!-- Дети -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Дети"
+            android:gravity="center"
+            android:textSize="18sp" />
+
+        <NumberPicker
+            android:id="@+id/numberPickerChildren"
+            android:layout_width="177dp"
+            android:layout_height="165dp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_suggested_article.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey"
+    android:background="@color/white">
+
+    <!-- Image at the top -->
+    <ImageView
+        android:id="@+id/articleImage"
+        android:layout_width="fill_parent"
+        android:layout_height="190dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dialog_fon1" /> <!-- Укажите свой ресурс изображения -->
+
+    <!-- Message Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Хотели бы вы прочитать статью? "
+        android:textSize="16sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:gravity="left"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Мы нашли кое-что для вас!"
+        android:textSize="16sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:gravity="left"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"/>
+
+    <!-- Buttons Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- "Yes" Button -->
+        <Button
+            android:id="@+id/btnYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Да"
+            android:backgroundTint="@color/orange"
+            android:textSize="16sp"/>
+
+        <!-- "No, Thanks" Button -->
+        <Button
+            android:id="@+id/btnNoThanks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Нет, спасибо"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/darkblue"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</LinearLayout>

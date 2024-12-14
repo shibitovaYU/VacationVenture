@@ -1,0 +1,60 @@
+<!-- item_flight_ticket.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey">
+
+    <TextView
+        android:id="@+id/flightNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stops: 1"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/airlineNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Airline Name"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/departureTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Departure Time"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/arrivalTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Arrival Time"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/durationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/baggageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Baggage Included"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

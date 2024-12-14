@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "83144780079",
+    "firebase_url": "https://vacationventure-28a86-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "vacationventure-28a86",
+    "storage_bucket": "vacationventure-28a86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83144780079:android:f7af6743f911387966d9da",
+        "android_client_info": {
+          "package_name": "com.example.vacationventure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAdnq4QUylW7cDvuYiokFy9bhyvSm1t80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

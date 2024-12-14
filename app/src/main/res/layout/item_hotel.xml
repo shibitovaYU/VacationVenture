@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/item_background"
+    android:textColor="@color/black"
+    android:textColorHint="@color/grey">
+
+    <!-- Изображение отеля -->
+    <ImageView
+        android:id="@+id/hotel_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Изображение отеля" />
+
+    <!-- Название отеля -->
+    <TextView
+        android:id="@+id/hotel_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:textSize="18sp"
+        android:text="Название отеля"
+        android:textColor="@color/black"/>
+
+    <!-- Цена отеля -->
+    <TextView
+        android:id="@+id/hotel_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Цена: 0"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/hotel_secondary_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Дополнительная информация:"
+        android:textColor="@color/black"/>
+
+    <!-- Рейтинг отеля -->
+    <TextView
+        android:id="@+id/hotel_bubble_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Рейтинг: 0"
+        android:textColor="@color/black"/>
+
+    <!-- Блок для предложения сделок -->
+    <TextView
+        android:id="@+id/view_all_deals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Посмотреть все предложения"
+        android:textColor="@color/darkblue"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:paddingTop="8dp" />
+
+    <!-- Ссылка на подробности -->
+    <TextView
+        android:id="@+id/event_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Подробнее"
+        android:textColor="@color/darkblue"
+        android:textSize="16sp"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>
