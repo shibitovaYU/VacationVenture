@@ -970,6 +970,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noResultsView: LinearLayout
     private lateinit var noResultsTextView: TextView
     private lateinit var messageTextView: TextView
+    private lateinit var homeRecommendationTextView: TextView
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var articleManager: ArticleManager
@@ -1084,6 +1085,7 @@ class MainActivity : AppCompatActivity() {
         eventDateEditText = findViewById(R.id.input_date_entertainment)
         eventCityEditText = findViewById(R.id.input_city_entertainment)
         messageTextView = findViewById(R.id.message_text_view)
+        homeRecommendationTextView = findViewById(R.id.home_recommendation_text)
 
         eventDateEditText.setOnClickListener {
             showDatePicker(eventDateEditText)
@@ -1098,6 +1100,8 @@ class MainActivity : AppCompatActivity() {
 
         // Показываем всплывающее окно с предложением статьи при запуске
         loadUserPreferences()
+
+        refreshHomeRecommendation("flight")
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.rasp.yandex.net/")
@@ -1265,21 +1269,35 @@ private fun selectButton(button: ImageButton) {
             "Flight", "Train" -> {
                 flightTrainLayout.visibility = LinearLayout.VISIBLE
                 mainButton.text = if (section == "Flight") "Найти билет" else "Найти поезд"
+                refreshHomeRecommendation(section.lowercase())
             }
             "Hotel" -> {
                 hotelLayout.visibility = LinearLayout.VISIBLE
                 mainButton.text = "Найти отель"
+                refreshHomeRecommendation("hotel")
             }
             "Restaurant" -> {
                 restaurantEventLayout.visibility = LinearLayout.VISIBLE
                 mainButton.text = "Найти ресторан"
+                refreshHomeRecommendation("restaurant")
             }
             "Event" -> {
                 entertainmentLayout.visibility = LinearLayout.VISIBLE
                 mainButton.text = "Найти мероприятие"
+                refreshHomeRecommendation("event")
             }
         }
     }
+    private fun refreshHomeRecommendation(section: String) {
+        val userId = firebaseAuth.currentUser?.uid
+        RecommendationApiClient.fetchHomeSuggestion(userId, section) { suggestion ->
+            runOnUiThread {
+                homeRecommendationTextView.text = suggestion
+                    ?: "Подсказка: начните с раздела \"$section\" — система подстроит рекомендации по сезону и времени."
+            }
+        }
+    }
+
     private fun clearInputFields() {
         if (flightTrainLayout.visibility == LinearLayout.VISIBLE) {
             departureDateEditText.text.clear()
