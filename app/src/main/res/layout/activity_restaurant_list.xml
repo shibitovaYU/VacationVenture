@@ -49,6 +49,47 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"/>
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="Все"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_high_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="Рейтинг 4.0+"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_open_now"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="Сейчас открыты"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <!-- RecyclerView для отображения данных -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"

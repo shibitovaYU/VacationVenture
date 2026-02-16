@@ -1,24 +1,15 @@
 package com.example.vacationventure
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.ListView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.ImageButton
-import android.widget.TextView
-import android.content.Intent
 
 class HotelListActivity : TicketsActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var hotelAdapter: HotelAdapter
-    private lateinit var favoritesButton: ImageButton
-    private lateinit var profileButton: ImageButton
-    private lateinit var mainButton: ImageButton
-    private lateinit var backButton: TextView
+    private var allHotels: List<Hotel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +18,22 @@ class HotelListActivity : TicketsActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Получаем список отелей из Intent
-        val hotelList = intent.getParcelableArrayListExtra<Hotel>("hotel_list")
-        if (hotelList != null) {
-            hotelAdapter = HotelAdapter(hotelList)
+        allHotels = intent.getParcelableArrayListExtra<Hotel>("hotel_list") ?: emptyList()
+        if (allHotels.isNotEmpty()) {
+            hotelAdapter = HotelAdapter(allHotels.toMutableList())
             recyclerView.adapter = hotelAdapter
         } else {
             Toast.makeText(this, "Нет данных для отображения", Toast.LENGTH_SHORT).show()
         }
+
+        findViewById<android.widget.TextView>(R.id.filter_hotel_all).setOnClickListener {
+            hotelAdapter.updateHotels(allHotels)
+        }
+        findViewById<android.widget.TextView>(R.id.filter_hotel_high_rating).setOnClickListener {
+            hotelAdapter.updateHotels(allHotels.filter { it.bubbleRating.rating >= 4.0 })
+        }
+
         setupNavigationButtons()
         setupBackButton()
     }
 }
-
-

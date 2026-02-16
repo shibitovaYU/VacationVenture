@@ -1,25 +1,20 @@
 package com.example.vacationventure
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.models.Event
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.widget.Toast
-import java.text.SimpleDateFormat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import java.util.*
-import com.google.firebase.database.*
+import com.example.vacationventure.model.FavoriteItem
 
 class FavoritesAdapter(
-    private val favoritesList: MutableList<Event>,
-    private val onFavoriteClick: (Event) -> Unit // Лямбда для обработки кликов по иконке
+    private val favoritesList: MutableList<FavoriteItem>,
+    private val onFavoriteClick: (FavoriteItem) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
@@ -29,11 +24,17 @@ class FavoritesAdapter(
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        val event = favoritesList[position]
-        holder.bind(event)
+        val item = favoritesList[position]
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = favoritesList.size
+
+    fun submitList(updatedItems: List<FavoriteItem>) {
+        favoritesList.clear()
+        favoritesList.addAll(updatedItems)
+        notifyDataSetChanged()
+    }
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val eventImage: ImageView = itemView.findViewById(R.id.event_image)
@@ -43,31 +44,38 @@ class FavoritesAdapter(
         private val eventLink: TextView = itemView.findViewById(R.id.event_link)
         private val favoriteIcon: ImageView = itemView.findViewById(R.id.favorite_icon)
 
-        fun bind(event: Event) {
-            eventName.text = event.name
-            eventDate.text = "Дата: ${event.dates.start.localDate}"
-            eventVenue.text = "Место: ${event._embedded.venues[0].name}"
+        fun bind(item: FavoriteItem) {
+            eventName.text = item.title
+            eventDate.text = item.subtitle
+            eventVenue.text = item.details
 
-            Glide.with(itemView.context).load(event.images.firstOrNull()?.url).into(eventImage)
+            Glide.with(itemView.context)
+                .load(item.imageUrl)
+                .placeholder(R.drawable.dialog_fon1)
+                .error(R.drawable.placeholder_image)
+                .into(eventImage)
 
             favoriteIcon.setImageResource(R.drawable.ic_favorite_filled)
 
-            val eventUrl = event.url
             eventLink.text = "Подробнее"
             eventLink.setTextColor(Color.BLUE)
             eventLink.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(eventUrl))
-                itemView.context.startActivity(browserIntent)  // Используем itemView.context для вызова startActivity
+                openExternalUrl(item.externalUrl)
             }
 
             favoriteIcon.setOnClickListener {
-                onFavoriteClick(event)
+                onFavoriteClick(item)
             }
 
             itemView.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.url))
-                itemView.context.startActivity(intent)
+                openExternalUrl(item.externalUrl)
             }
+        }
+
+        private fun openExternalUrl(url: String?) {
+            if (url.isNullOrBlank()) return
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            itemView.context.startActivity(browserIntent)
         }
     }
 }

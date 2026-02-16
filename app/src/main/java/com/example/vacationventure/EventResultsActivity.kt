@@ -154,7 +154,7 @@ class EventResultsActivity : TicketsActivity() {
 
         val imageUrl = event.images.firstOrNull()?.url
         if (imageUrl != null) {
-            Glide.with(this).load(imageUrl).into(eventImage)
+            Glide.with(this).load(imageUrl).placeholder(R.drawable.dialog_fon1).error(R.drawable.placeholder_image).into(eventImage)
         } else {
             Log.d("EventResultsActivity", "Image URL is null")
         }
@@ -163,6 +163,11 @@ class EventResultsActivity : TicketsActivity() {
 
         favoriteIcon.setOnClickListener {
             handleFavoriteClick(event, favoriteIcon) // вызов обработчика
+        }
+
+        eventView.setOnClickListener {
+            val venueQuery = Uri.encode("${event.name} ${event._embedded.venues[0].name} отзывы фото карта")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=$venueQuery")))
         }
 
         eventsContainer.addView(eventView)
