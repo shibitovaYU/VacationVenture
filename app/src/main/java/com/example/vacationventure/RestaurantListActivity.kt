@@ -2,17 +2,12 @@ package com.example.vacationventure
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.Restaurant
-import com.example.vacationventure.RestaurantDetails
-import com.example.vacationventure.RestaurantDetailActivity
-import com.example.vacationventure.RestaurantAdapter
-import retrofit2.converter.gson.GsonConverterFactory
-import android.util.Log
-import android.widget.ImageButton
-import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 
 class RestaurantListActivity : AppCompatActivity() {
 
@@ -32,16 +27,19 @@ class RestaurantListActivity : AppCompatActivity() {
         profileButton = findViewById(R.id.button_profile)
         backButton = findViewById(R.id.back_button)
 
-        // Получение списка ресторанов из Intent
         restaurants = intent.getParcelableArrayListExtra<Restaurant>("restaurant_list") ?: listOf()
 
-        // Настройка RecyclerView
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        restaurantAdapter = RestaurantAdapter(restaurants) { restaurant ->
-            // Действие при нажатии на элемент списка, если хотите открыть детальную информацию
-        }
+        restaurantAdapter = RestaurantAdapter(restaurants.toMutableList()) { _ -> }
         recyclerView.adapter = restaurantAdapter
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        RecommendationApiClient.rerankRestaurants(currentUserId, restaurants) { ranked, recommendedId ->
+            runOnUiThread {
+                restaurantAdapter.updateRestaurants(ranked, recommendedId)
+            }
+        }
 
         favoritesButton.setOnClickListener {
             val intent = Intent(this, FavoriteActivity::class.java)

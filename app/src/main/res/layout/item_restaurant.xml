@@ -9,6 +9,22 @@
     android:textColor="@color/black"
     android:textColorHint="@color/grey">
 
+
+    <TextView
+        android:id="@+id/recommendationBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_button_background"
+        android:paddingLeft="12dp"
+        android:paddingTop="6dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="6dp"
+        android:text="Рекомендовано для вас"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Изображение ресторана, занимающее всю ширину -->
     <ImageView
         android:id="@+id/restaurantImage"
