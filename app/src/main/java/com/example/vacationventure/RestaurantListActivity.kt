@@ -1,18 +1,14 @@
 package com.example.vacationventure
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.Restaurant
-import com.example.vacationventure.RestaurantDetails
-import com.example.vacationventure.RestaurantDetailActivity
-import com.example.vacationventure.RestaurantAdapter
-import retrofit2.converter.gson.GsonConverterFactory
-import android.util.Log
-import android.widget.ImageButton
-import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 
 class RestaurantListActivity : AppCompatActivity() {
 
@@ -32,33 +28,40 @@ class RestaurantListActivity : AppCompatActivity() {
         profileButton = findViewById(R.id.button_profile)
         backButton = findViewById(R.id.back_button)
 
-        // Получение списка ресторанов из Intent
         restaurants = intent.getParcelableArrayListExtra<Restaurant>("restaurant_list") ?: listOf()
 
-        // Настройка RecyclerView
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        restaurantAdapter = RestaurantAdapter(restaurants) { restaurant ->
-            // Действие при нажатии на элемент списка, если хотите открыть детальную информацию
+        restaurantAdapter = RestaurantAdapter(restaurants.toMutableList()) { restaurant ->
+            val query = Uri.encode("${restaurant.name} отзывы фото карта")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=$query")))
         }
         recyclerView.adapter = restaurantAdapter
 
-        favoritesButton.setOnClickListener {
-            val intent = Intent(this, FavoriteActivity::class.java)
-            startActivity(intent)
-        }
-        profileButton.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-
-        mainButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        RecommendationApiClient.rerankRestaurants(currentUserId, restaurants) { ranked, recommendedId ->
+            runOnUiThread {
+                restaurants = ranked
+                restaurantAdapter.updateRestaurants(ranked, recommendedId)
+            }
         }
 
-        backButton.setOnClickListener {
-            finish()
+        findViewById<TextView>(R.id.filter_restaurant_all).setOnClickListener {
+            restaurantAdapter.updateRestaurants(restaurants, null)
         }
+        findViewById<TextView>(R.id.filter_restaurant_high_rating).setOnClickListener {
+            restaurantAdapter.updateRestaurants(restaurants.filter { it.averageRating >= 4.0 }, null)
+        }
+        findViewById<TextView>(R.id.filter_restaurant_open_now).setOnClickListener {
+            restaurantAdapter.updateRestaurants(
+                restaurants.filter { it.currentOpenStatusText?.contains("open", ignoreCase = true) == true || it.currentOpenStatusText?.contains("открыт", ignoreCase = true) == true },
+                null
+            )
+        }
+
+        favoritesButton.setOnClickListener { startActivity(Intent(this, FavoriteActivity::class.java)) }
+        profileButton.setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
+        mainButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+        backButton.setOnClickListener { finish() }
     }
 }

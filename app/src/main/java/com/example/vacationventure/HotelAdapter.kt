@@ -1,20 +1,23 @@
 package com.example.vacationventure
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
-import com.google.mlkit.nl.translate.Translator
-import android.net.Uri
-import android.content.Intent
 
-class HotelAdapter(private val hotels: List<Hotel>) : RecyclerView.Adapter<HotelAdapter.HotelViewHolder>() {
+class HotelAdapter(private val hotels: MutableList<Hotel>) : RecyclerView.Adapter<HotelAdapter.HotelViewHolder>() {
 
     class HotelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hotelImage: ImageView = view.findViewById(R.id.hotel_image)
@@ -22,10 +25,14 @@ class HotelAdapter(private val hotels: List<Hotel>) : RecyclerView.Adapter<Hotel
         val hotelPrice: TextView = view.findViewById(R.id.hotel_price)
         val hotelSecondaryInfo: TextView = view.findViewById(R.id.hotel_secondary_info)
         val hotelBubbleRating: TextView = view.findViewById(R.id.hotel_bubble_rating)
-        val viewAllDeals: TextView = view.findViewById(R.id.view_all_deals) // Reference for the "view all deals" TextView
+        val eventLink: TextView = view.findViewById(R.id.event_link)
+        val favoriteIcon: ImageView = view.findViewById(R.id.hotel_favorite_icon)
     }
 
     private var translator: Translator? = null
+    private val auth = FirebaseAuth.getInstance()
+    private val favoritesDb = FirebaseDatabase.getInstance("https://vacationventure-28a86-default-rtdb.europe-west1.firebasedatabase.app/")
+        .getReference("favorites_hotels")
 
     init {
         val options = TranslatorOptions.Builder()
@@ -44,86 +51,98 @@ class HotelAdapter(private val hotels: List<Hotel>) : RecyclerView.Adapter<Hotel
     override fun onBindViewHolder(holder: HotelViewHolder, position: Int) {
         val hotel = hotels[position]
 
-        // Function for translating text
         fun translateText(text: String?, callback: (String) -> Unit) {
-            if (text.isNullOrEmpty()) {
-                callback("") // Return empty string if no text
-            } else {
-                translator?.translate(text)
-                    ?.addOnSuccessListener { translatedText -> callback(translatedText) }
-                    ?.addOnFailureListener { callback(text) }
-            }
+            if (text.isNullOrEmpty()) callback("")
+            else translator?.translate(text)?.addOnSuccessListener(callback)?.addOnFailureListener { callback(text) }
         }
 
-        // Handle hotel title
-        val rawTitle = hotel.title
-        val titleWithoutNumber = if (rawTitle.length > 3 && rawTitle[1] == '.' && rawTitle[2] == ' ') {
-            rawTitle.substring(3) // Remove number from title
-        } else if (rawTitle.length > 4 && rawTitle[2] == '.' && rawTitle[3] == ' ') {
-            rawTitle.substring(4)
-        } else {
-            rawTitle
-        }
+        translateText(hotel.title) { holder.hotelName.text = it.ifBlank { hotel.title } }
+        holder.hotelPrice.text = convertDollarsToRubles(hotel.priceForDisplay)
+        translateText(hotel.secondaryInfo) { holder.hotelSecondaryInfo.text = it }
 
-        translateText(titleWithoutNumber) { translatedName ->
-            holder.hotelName.text = translatedName
-        }
-
-        // Set price in rubles
-        val priceInRubles = convertDollarsToRubles(hotel.priceForDisplay)
-        setTextIfNotNull(holder.hotelPrice, priceInRubles)
-
-
-        // Set secondary info
-        translateText(hotel.secondaryInfo) { translatedSecondaryInfo ->
-            holder.hotelSecondaryInfo.text = translatedSecondaryInfo
-        }
-
-        // Set rating
         holder.hotelBubbleRating.text = if (hotel.bubbleRating.rating > 0) {
             "Рейтинг: ${hotel.bubbleRating.rating} (${hotel.bubbleRating.count} отзывов)"
-        } else {
-            "Рейтинг отсутствует"
-        }
+        } else "Рейтинг отсутствует"
 
-        // Load image using Glide
         Glide.with(holder.hotelImage.context)
             .load(hotel.cardPhotos.firstOrNull())
-            .placeholder(R.drawable.dialog_fon1) // Placeholder while loading image
-            .error(R.drawable.placeholder_image) // Error image if loading fails
+            .placeholder(R.drawable.dialog_fon1)
+            .error(R.drawable.placeholder_image)
             .into(holder.hotelImage)
+
+        holder.eventLink.text = "Карта / отзывы / фото"
+        holder.eventLink.setOnClickListener {
+            val query = Uri.encode("${hotel.title} reviews photos map")
+            val url = hotel.tripAdvisorUrl ?: "https://www.google.com/search?q=$query"
+            holder.itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
+
+        checkFavoriteState(hotel, holder.favoriteIcon)
+        holder.favoriteIcon.setOnClickListener { toggleFavorite(hotel, holder.favoriteIcon) }
+
+        holder.itemView.setOnClickListener {
+            val query = Uri.encode("${hotel.title} map")
+            val url = "https://www.google.com/search?q=$query"
+            holder.itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
     }
 
     override fun getItemCount(): Int = hotels.size
 
-    // Release resources used by the translator
+    fun updateHotels(updated: List<Hotel>) {
+        hotels.clear()
+        hotels.addAll(updated)
+        notifyDataSetChanged()
+    }
+
     fun release() {
         translator?.close()
     }
 
-    // Convert price from dollars to rubles
+    private fun toggleFavorite(hotel: Hotel, icon: ImageView) {
+        val userId = auth.currentUser?.uid ?: return
+        val ref = favoritesDb.child(userId).child(hotel.id)
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    ref.removeValue()
+                    icon.setImageResource(R.drawable.ic_favorite_border)
+                    Toast.makeText(icon.context, "Удалено из избранного", Toast.LENGTH_SHORT).show()
+                } else {
+                    ref.setValue(hotel)
+                    icon.setImageResource(R.drawable.ic_favorite_filled)
+                    Toast.makeText(icon.context, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) = Unit
+        })
+    }
+
+    private fun checkFavoriteState(hotel: Hotel, icon: ImageView) {
+        val userId = auth.currentUser?.uid ?: run {
+            icon.setImageResource(R.drawable.ic_favorite_border)
+            return
+        }
+        favoritesDb.child(userId).child(hotel.id).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                icon.setImageResource(if (snapshot.exists()) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border)
+            }
+
+            override fun onCancelled(error: DatabaseError) = Unit
+        })
+    }
+
     private fun convertDollarsToRubles(priceInDollars: String?): String {
-        val dollarToRubleRate = 100 // 1 dollar = 100 rubles
+        val dollarToRubleRate = 100
         return if (!priceInDollars.isNullOrEmpty()) {
             try {
                 val price = priceInDollars.replace("$", "").toDouble()
                 val priceInRubles = price * dollarToRubleRate
                 "₽${String.format("%.2f", priceInRubles)}"
-            } catch (e: NumberFormatException) {
-                priceInDollars ?: "Цена не указана"
+            } catch (_: NumberFormatException) {
+                priceInDollars
             }
-        } else {
-            "Цена не указана"
-        }
-    }
-
-    // Set text if it's not null or empty
-    private fun setTextIfNotNull(textView: TextView, text: String?) {
-        if (text.isNullOrEmpty()) {
-            textView.visibility = View.GONE
-        } else {
-            textView.visibility = View.VISIBLE
-            textView.text = text
-        }
+        } else "Цена не указана"
     }
 }

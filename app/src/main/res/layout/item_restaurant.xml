@@ -9,6 +9,22 @@
     android:textColor="@color/black"
     android:textColorHint="@color/grey">
 
+
+    <TextView
+        android:id="@+id/recommendationBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_button_background"
+        android:paddingLeft="12dp"
+        android:paddingTop="6dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="6dp"
+        android:text="Рекомендовано для вас"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Изображение ресторана, занимающее всю ширину -->
     <ImageView
         android:id="@+id/restaurantImage"
@@ -53,5 +69,14 @@
         android:textColor="@color/darkblue"
         android:textSize="16sp"
         android:paddingBottom="8dp" />
+
+    <ImageView
+        android:id="@+id/restaurantFavoriteIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="-28dp"
+        android:contentDescription="Добавить в избранное"
+        android:src="@drawable/ic_favorite_border" />
 
 </LinearLayout>

@@ -40,12 +40,71 @@
             android:layout_marginLeft="40dp"/>
     </LinearLayout>
 
+    
+    <HorizontalScrollView
+        android:id="@+id/favorites_filters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_linear_layout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/filter_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="Все"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/filter_restaurants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="Рестораны"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/filter_events"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="Мероприятия"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/filter_hotels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="Отели"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorites_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
-        app:layout_constraintTop_toBottomOf="@id/top_linear_layout"
+        app:layout_constraintTop_toBottomOf="@id/favorites_filters"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="8dp"/>
