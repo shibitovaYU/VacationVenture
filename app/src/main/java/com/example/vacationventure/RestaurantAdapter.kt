@@ -160,8 +160,15 @@ class RestaurantAdapter(
     }
 
     private fun getFavoriteKey(restaurant: Restaurant): String {
-        return restaurant.restaurantsId.takeIf { it.isNotBlank() }
-            ?: restaurant.name.replace("/", "_").trim()
+        val directId = restaurant.restaurantsId.trim()
+        if (directId.isNotBlank()) return directId
+
+        val sanitizedName = restaurant.name
+            .trim()
+            .replace(Regex("[.#$\\[\\]/]"), "_")
+            .replace(Regex("\\s+"), "_")
+
+        return sanitizedName.ifBlank { "restaurant_${restaurant.name.hashCode()}" }
     }
 
     private fun checkFavoriteState(restaurant: Restaurant, icon: ImageView) {
