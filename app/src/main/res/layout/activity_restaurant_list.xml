@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Прокручиваемая часть -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -25,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="0dp"
                 android:layout_marginTop="40dp">
 
                 <TextView
@@ -35,10 +33,9 @@
                     android:text="Вот что нам удалось найти..."
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/darkblue"/>
+                    android:textColor="@color/darkblue" />
             </LinearLayout>
 
-            <!-- Ссылка для перехода назад -->
             <TextView
                 android:id="@+id/back_button"
                 android:layout_width="wrap_content"
@@ -47,7 +44,15 @@
                 android:textColor="@color/darkblue"
                 android:textSize="16sp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Быстрые фильтры"
+                android:textColor="@color/darkblue"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -90,7 +95,66 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- RecyclerView для отображения данных -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Дополнительные фильтры"
+                android:textColor="@color/darkblue"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:id="@+id/filter_restaurant_toggle_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Подробнее ▼"
+                android:textColor="@color/darkblue"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <HorizontalScrollView
+                android:id="@+id/filter_restaurant_detailed_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_price_low"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="Недорогие"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_with_menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="С меню"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/filter_restaurant_popular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_button_background"
+                        android:padding="8dp"
+                        android:text="100+ отзывов"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
@@ -98,7 +162,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Нижняя навигационная панель -->
     <LinearLayout
         android:id="@+id/bottom_nav_bar"
         android:layout_width="0dp"
@@ -110,7 +173,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Кнопка "Избранное" -->
         <ImageButton
             android:id="@+id/button_favorites"
             android:layout_width="24dp"
@@ -121,7 +183,6 @@
             android:contentDescription="Избранное"
             android:src="@drawable/ic_favotire" />
 
-        <!-- Кнопка "Главная" -->
         <ImageButton
             android:id="@+id/button_main"
             android:layout_width="24dp"
@@ -131,7 +192,6 @@
             android:contentDescription="Главная"
             android:src="@drawable/ic_main" />
 
-        <!-- Кнопка "Профиль" -->
         <ImageButton
             android:id="@+id/button_profile"
             android:layout_width="24dp"
