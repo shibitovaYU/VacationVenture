@@ -35,12 +35,21 @@
             android:text="VACATION VENTURE"
             android:textColor="@color/blue"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="40dp"/>
     </LinearLayout>
 
-    
+    <TextView
+        android:id="@+id/favorites_filters_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="Фильтры по категориям"
+        android:textColor="@color/darkblue"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_linear_layout" />
+
     <HorizontalScrollView
         android:id="@+id/favorites_filters"
         android:layout_width="0dp"
@@ -48,7 +57,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_linear_layout">
+        app:layout_constraintTop_toBottomOf="@id/favorites_filters_title">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -98,6 +107,67 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <TextView
+        android:id="@+id/favorites_filters_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="12dp"
+        android:text="Дополнительные условия"
+        android:textColor="@color/darkblue"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/favorites_filters" />
+
+    <TextView
+        android:id="@+id/filter_favorites_toggle_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="12dp"
+        android:text="Подробнее ▼"
+        android:textColor="@color/darkblue"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/favorites_filters_details_title" />
+
+    <HorizontalScrollView
+        android:id="@+id/favorites_filters_detailed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_favorites_toggle_details">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/filter_with_images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="С фото"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/filter_with_links"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_background"
+                android:padding="8dp"
+                android:text="С ссылкой"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
 
     <TextView
@@ -160,10 +230,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="8dp"/>
-
-
-
-
 
     <LinearLayout
         android:id="@+id/bottom_nav_bar"
