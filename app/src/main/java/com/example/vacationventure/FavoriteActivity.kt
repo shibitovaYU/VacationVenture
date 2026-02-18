@@ -46,8 +46,8 @@ class FavoriteActivity : AppCompatActivity() {
 
         favoritesRecyclerView = findViewById(R.id.favorites_recycler_view)
         titleTextView = findViewById(R.id.title_text_view)
-        detailedToggleButton = findViewById(R.id.favorites_details_toggle_button)
-        detailedFiltersRow = findViewById(R.id.favorites_details_filters)
+        detailedToggleButton = findViewById(R.id.filter_favorites_toggle_details)
+        detailedFiltersRow = findViewById(R.id.favorites_filters_detailed)
 
         favoritesAdapter = FavoritesAdapter(mutableListOf()) { item -> toggleFavorite(item) }
         favoritesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -81,11 +81,11 @@ class FavoriteActivity : AppCompatActivity() {
             applyFilter()
         }
 
-        findViewById<TextView>(R.id.filter_favorites_with_images).setOnClickListener {
+        findViewById<TextView>(R.id.filter_with_images).setOnClickListener {
             detailsFilter = DetailsFilter.WITH_IMAGE
             applyFilter()
         }
-        findViewById<TextView>(R.id.filter_favorites_with_links).setOnClickListener {
+        findViewById<TextView>(R.id.filter_with_links).setOnClickListener {
             detailsFilter = DetailsFilter.WITH_LINK
             applyFilter()
         }

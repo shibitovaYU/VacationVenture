@@ -136,11 +136,8 @@ class RestaurantAdapter(
     }
 
     private fun toggleFavorite(restaurant: Restaurant, icon: ImageView) {
-        val userId = auth.currentUser?.uid ?: run {
-            Toast.makeText(icon.context, "Войдите в аккаунт, чтобы добавить в избранное", Toast.LENGTH_SHORT).show()
-            return
-        }
-        val ref = favoritesDb.child(userId).child(getFavoriteKey(restaurant))
+        val userId = auth.currentUser?.uid ?: return
+        val ref = favoritesDb.child(userId).child(restaurant.restaurantsId)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -150,30 +147,13 @@ class RestaurantAdapter(
                     Toast.makeText(icon.context, "Удалено из избранного", Toast.LENGTH_SHORT).show()
                 } else {
                     ref.setValue(restaurant)
-                        .addOnSuccessListener {
-                            icon.setImageResource(R.drawable.ic_favorite_filled)
-                            Toast.makeText(icon.context, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(icon.context, "Ошибка при добавлении в избранное", Toast.LENGTH_SHORT).show()
-                        }
+                    icon.setImageResource(R.drawable.ic_favorite_filled)
+                    Toast.makeText(icon.context, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) = Unit
         })
-    }
-
-    private fun getFavoriteKey(restaurant: Restaurant): String {
-        val directId = restaurant.restaurantsId.trim()
-        if (directId.isNotBlank()) return directId
-
-        val sanitizedName = restaurant.name
-            .trim()
-            .replace(Regex("[.#$\\[\\]/]"), "_")
-            .replace(Regex("\\s+"), "_")
-
-        return sanitizedName.ifBlank { "restaurant_${restaurant.name.hashCode()}" }
     }
 
     private fun checkFavoriteState(restaurant: Restaurant, icon: ImageView) {
@@ -182,7 +162,7 @@ class RestaurantAdapter(
             return
         }
 
-        favoritesDb.child(userId).child(getFavoriteKey(restaurant))
+        favoritesDb.child(userId).child(restaurant.restaurantsId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     icon.setImageResource(
