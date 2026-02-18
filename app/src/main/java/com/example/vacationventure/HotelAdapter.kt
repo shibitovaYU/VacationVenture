@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -100,8 +103,11 @@ class HotelAdapter(private val hotels: MutableList<Hotel>) : RecyclerView.Adapte
     }
 
     private fun toggleFavorite(hotel: Hotel, icon: ImageView) {
-        val userId = auth.currentUser?.uid ?: return
-        val ref = favoritesDb.child(userId).child(hotel.id)
+        val userId = auth.currentUser?.uid ?: run {
+            Toast.makeText(icon.context, "Войдите в аккаунт, чтобы добавить в избранное", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val ref = favoritesDb.child(userId).child(getFavoriteKey(hotel))
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -110,8 +116,13 @@ class HotelAdapter(private val hotels: MutableList<Hotel>) : RecyclerView.Adapte
                     Toast.makeText(icon.context, "Удалено из избранного", Toast.LENGTH_SHORT).show()
                 } else {
                     ref.setValue(hotel)
-                    icon.setImageResource(R.drawable.ic_favorite_filled)
-                    Toast.makeText(icon.context, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
+                        .addOnSuccessListener {
+                            icon.setImageResource(R.drawable.ic_favorite_filled)
+                            Toast.makeText(icon.context, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(icon.context, "Ошибка при добавлении в избранное", Toast.LENGTH_SHORT).show()
+                        }
                 }
             }
 
@@ -119,12 +130,25 @@ class HotelAdapter(private val hotels: MutableList<Hotel>) : RecyclerView.Adapte
         })
     }
 
+
+    private fun getFavoriteKey(hotel: Hotel): String {
+        val directId = hotel.id.trim()
+        if (directId.isNotBlank()) return directId
+
+        val sanitizedName = hotel.title
+            .trim()
+            .replace(Regex("[.#$\\[\\]/]"), "_")
+            .replace(Regex("\\s+"), "_")
+
+        return sanitizedName.ifBlank { "hotel_${hotel.title.hashCode()}" }
+    }
+
     private fun checkFavoriteState(hotel: Hotel, icon: ImageView) {
         val userId = auth.currentUser?.uid ?: run {
             icon.setImageResource(R.drawable.ic_favorite_border)
             return
         }
-        favoritesDb.child(userId).child(hotel.id).addListenerForSingleValueEvent(object : ValueEventListener {
+        favoritesDb.child(userId).child(getFavoriteKey(hotel)).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 icon.setImageResource(if (snapshot.exists()) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border)
             }
