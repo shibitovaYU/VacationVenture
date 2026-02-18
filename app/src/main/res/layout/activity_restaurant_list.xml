@@ -46,14 +46,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Быстрые фильтры"
-                android:textColor="@color/darkblue"
-                android:textStyle="bold"
-                android:layout_marginBottom="6dp" />
-
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,14 +86,6 @@
                         android:textColor="@android:color/white" />
                 </LinearLayout>
             </HorizontalScrollView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Дополнительные фильтры"
-                android:textColor="@color/darkblue"
-                android:textStyle="bold"
-                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:id="@+id/filter_restaurant_toggle_details"
