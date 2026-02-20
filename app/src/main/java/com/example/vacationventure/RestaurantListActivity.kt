@@ -2,17 +2,11 @@ package com.example.vacationventure
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.Restaurant
-import com.example.vacationventure.RestaurantDetails
-import com.example.vacationventure.RestaurantDetailActivity
-import com.example.vacationventure.RestaurantAdapter
-import retrofit2.converter.gson.GsonConverterFactory
-import android.util.Log
-import android.widget.ImageButton
-import android.widget.TextView
 
 class RestaurantListActivity : AppCompatActivity() {
 

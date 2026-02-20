@@ -1,52 +1,80 @@
 package com.example.vacationventure.model
 
-// Главный класс, который содержит список данных о рейсах
+import android.os.Parcel
+import android.os.Parcelable
+
 data class FlightSearchResponse(
-    val data: List<FlightData>
-)
+    val segments: List<FlightSegment>
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        mutableListOf<FlightSegment>().apply {
+            parcel.readList(this, FlightSegment::class.java.classLoader)
+        }
+    )
 
-// Класс для описания одного рейса
-data class FlightData(
-    val id: String,
-    val itineraries: List<Itinerary>,
-    val price: Price
-)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeList(segments)
+    }
 
-// Класс для описания маршрута (туда и обратно)
-data class Itinerary(
-    val segments: List<Segment>, // Список сегментов рейса (например, каждый перелет может состоять из нескольких сегментов)
-    val duration: String // Общая длительность маршрута (туда или обратно)
-)
+    override fun describeContents() = 0
 
-// Класс для описания сегмента рейса (каждый перелет)
-data class Segment(
-    val departure: Departure,
-    val arrival: Arrival,
-    val carrierCode: String, // Код авиакомпании
-    val duration: String, // Длительность сегмента
-    val numberOfStops: Int, // Количество пересадок
-    val stopovers: List<Stopover>? // Пересадки, если они есть
-)
+    companion object CREATOR : Parcelable.Creator<FlightSearchResponse> {
+        override fun createFromParcel(parcel: Parcel) = FlightSearchResponse(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<FlightSearchResponse?>(size)
+    }
+}
 
-// Класс для информации о вылете
-data class Departure(
-    val iataCode: String, // Код аэропорта вылета
-    val at: String // Дата и время вылета
-)
+data class FlightSegment(
+    val arrival: String,
+    val from: Station,
+    val thread: ThreadInfo,
+    val departure_platform: String,
+    val departure: String,
+    val stops: String,
+    val departure_terminal: String?,
+    val to: Station,
+    val has_transfers: Boolean,
+    val tickets_info: TicketsInfo,
+    val duration: Int,
+    val arrival_terminal: String,
+    val start_date: String
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readParcelable(Station::class.java.classLoader)!!,
+        parcel.readParcelable(ThreadInfo::class.java.classLoader)!!,
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString(),
+        parcel.readParcelable(Station::class.java.classLoader)!!,
+        parcel.readByte() != 0.toByte(),
+        parcel.readParcelable(TicketsInfo::class.java.classLoader)!!,
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
 
-// Класс для информации о прибытии
-data class Arrival(
-    val iataCode: String, // Код аэропорта прибытия
-    val at: String // Дата и время прибытия
-)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(arrival)
+        parcel.writeParcelable(from, flags)
+        parcel.writeParcelable(thread, flags)
+        parcel.writeString(departure_platform)
+        parcel.writeString(departure)
+        parcel.writeString(stops)
+        parcel.writeString(departure_terminal)
+        parcel.writeParcelable(to, flags)
+        parcel.writeByte(if (has_transfers) 1 else 0)
+        parcel.writeParcelable(tickets_info, flags)
+        parcel.writeInt(duration)
+        parcel.writeString(arrival_terminal)
+        parcel.writeString(start_date)
+    }
 
-// Класс для пересадок (если есть)
-data class Stopover(
-    val iataCode: String, // Код аэропорта пересадки
-    val duration: String // Длительность пересадки
-)
+    override fun describeContents() = 0
 
-// Класс для описания цены
-data class Price(
-    val total: String // Общая стоимость рейса
-)
+    companion object CREATOR : Parcelable.Creator<FlightSegment> {
+        override fun createFromParcel(parcel: Parcel) = FlightSegment(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<FlightSegment?>(size)
+    }
+}

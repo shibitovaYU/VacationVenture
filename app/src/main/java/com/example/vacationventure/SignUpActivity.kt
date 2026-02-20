@@ -1,10 +1,8 @@
 package com.example.vacationventure
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import com.example.vacationventure.LogInActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.vacationventure.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 

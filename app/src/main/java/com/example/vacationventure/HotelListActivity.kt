@@ -1,15 +1,11 @@
 package com.example.vacationventure
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.ListView
-import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.ImageButton
-import android.widget.TextView
-import android.content.Intent
 
 class HotelListActivity : TicketsActivity() {
 

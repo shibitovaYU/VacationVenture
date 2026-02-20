@@ -1,12 +1,11 @@
 package com.example.vacationventure
 
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.TextView
-import android.view.View
-import com.example.vacationventure.MainActivity.TrainSearchResponse
-import com.example.vacationventure.MainActivity.TrainSegment
+import com.example.vacationventure.model.TrainSearchResponse
 
 class TrainTicketsActivity : TicketsActivity() {
 

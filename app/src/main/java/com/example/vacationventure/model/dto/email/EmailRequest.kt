@@ -1,4 +1,7 @@
-package com.example.vacationventure
+package com.example.vacationventure.model.dto.email
+
+import com.example.vacationventure.Content
+import com.example.vacationventure.Personalization
 
 data class EmailRequest(
     val personalizations: List<Personalization>,

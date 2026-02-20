@@ -1,17 +1,16 @@
 package com.example.vacationventure
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.vacationventure.UserPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import android.content.Intent
 
 class RecommendationSettingsActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth

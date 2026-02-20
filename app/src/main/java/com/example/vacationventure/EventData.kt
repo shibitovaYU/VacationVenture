@@ -1,5 +1,7 @@
 package com.example.vacationventure.models
 
+import com.example.vacationventure.model.Dates
+
 data class EventData(
     val name: String = "",
     val dates: Dates = Dates(),             // Используем объект Dates

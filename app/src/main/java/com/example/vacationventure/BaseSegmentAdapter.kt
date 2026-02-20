@@ -2,13 +2,12 @@ package com.example.vacationventure
 
 import android.content.Intent
 import android.net.Uri
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 abstract class BaseSegmentAdapter<T>(
     protected val segments: List<T>

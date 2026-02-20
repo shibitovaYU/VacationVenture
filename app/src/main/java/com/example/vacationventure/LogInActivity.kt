@@ -2,22 +2,19 @@ package com.example.vacationventure
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
+import android.util.Base64
 import android.util.Patterns
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.vacationventure.SignupActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.vacationventure.databinding.ActivityLogInBinding
 import com.google.firebase.auth.FirebaseAuth
-import android.text.InputType
-import android.view.MotionEvent
-import android.net.Uri
 import java.security.MessageDigest
-import android.util.Base64
-import com.example.vacationventure.R
 
 class LogInActivity : AppCompatActivity() {
 

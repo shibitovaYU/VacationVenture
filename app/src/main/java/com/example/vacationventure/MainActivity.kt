@@ -1,87 +1,66 @@
 package com.example.vacationventure
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.os.Bundle
-import android.net.Uri
-import org.json.JSONArray
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.TextView
-import android.widget.ImageView
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.StrictMode
+import android.util.Log
+import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
-import android.widget.EditText
-import android.widget.ListView
-import kotlin.concurrent.timer
-import android.widget.ImageButton
-import java.nio.charset.StandardCharsets
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Spinner
-import com.google.gson.annotations.SerializedName
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.example.vacationventure.databinding.ActivityMainBinding
-import androidx.appcompat.app.AppCompatActivity
-import com.example.vacationventure.BubbleRating
-import android.util.Log
-import java.util.Calendar
-import android.content.Intent
-import android.app.AlertDialog
+import android.widget.ListView
 import android.widget.NumberPicker
-import android.view.LayoutInflater
-import java.util.Locale
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.vacationventure.data.cityNames
+import com.example.vacationventure.data.cityTranslations
+import com.example.vacationventure.model.FlightSearchResponse
+import com.example.vacationventure.model.TrainSearchResponse
+import com.example.vacationventure.models.Event
+import com.example.vacationventure.network.YandexRaspService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.POST
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Field
-import android.os.Parcel
-import android.os.Parcelable
 import retrofit2.http.Header
-import kotlinx.parcelize.Parcelize
-import okhttp3.OkHttpClient
-import java.security.cert.X509Certificate
-import java.net.URLEncoder
-import javax.net.ssl.*
-import java.security.SecureRandom
-import org.json.JSONObject
-import okhttp3.Request
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+import retrofit2.http.Query
 import java.io.IOException
+import java.net.URLEncoder
+import java.security.cert.X509Certificate
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
+import javax.net.ssl.X509TrustManager
 import kotlin.concurrent.thread
-import android.widget.Toast
-import com.google.gson.Gson
-import okhttp3.Response as OkHttpResponse
-import okhttp3.*
-import android.os.StrictMode
-import android.net.ConnectivityManager
-import android.net.Network
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.vacationventure.models.Event
-import com.example.vacationventure.models.Embedded
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.example.vacationventure.FlightTicket
-import okhttp3.*
-import java.util.*
-import com.google.gson.GsonBuilder
+import kotlin.concurrent.timer
 
 
 private lateinit var retrofit: Retrofit
@@ -89,140 +68,13 @@ private lateinit var retrofit: Retrofit
 private const val TAG = "FlightSearch"
 
 class MainActivity : AppCompatActivity() {
-
-    // Примеры городов и соответствующих кодов
-    private val cities = arrayOf(
-        "Москва",
-        "Санкт-Петербург",
-        "Нью-Йорк",
-        "Лондон",
-        "Берлин",
-        "Париж",
-        "Токио",
-        "Сидней",
-        "Рим",
-        "Мадрид",
-        "Торонто",
-        "Дубай",
-        "Брюссель",
-        "Будапешт",
-        "Копенгаген",
-        "Стокгольм",
-        "Цюрих",
-        "Сеул",
-        "Бангкок",
-        "Гонконг",
-        "Мехико",
-        "Лос-Анджелес",
-        "Чикаго",
-        "Хьюстон",
-        "Филадельфия",
-        "Сан-Франциско",
-        "Сан-Диего",
-        "Сиэтл",
-        "Вашингтон",
-        "Бостон",
-        "Даллас",
-        "Атланта",
-        "Саров",
-        "Нижний Новгород",
-        "Белорецк",
-        "Тюмень",
-        "Красноярск",
-        "Владивосток",
-        "Новосибирск",
-        "Сочи",
-        "Красноярск",
-        "Тверь",
-        "Магадан",
-        "Владимир",
-        "Волгоград",
-        "Ростов-на-Дону",
-        "Каазнь",
-        "Адлер",
-        "Вологда",
-        "Астрахань",
-        "Архангельск",
-        "Петрозаводск"
-    )
-    private val englishCities = arrayOf(
-        "Moscow",
-        "Saint Petersburg",
-        "New York",
-        "London",
-        "Berlin",
-        "Paris",
-        "Tokyo",
-        "Sydney",
-        "Rome",
-        "Madrid",
-        "Toronto",
-        "Dubai",
-        "Brussels",
-        "Budapest",
-        "Copenhagen",
-        "Stockholm",
-        "Zurich",
-        "Seoul",
-        "Bangkok",
-        "Hong Kong",
-        "Mexico City",
-        "Los Angeles",
-        "Chicago",
-        "Houston",
-        "Philadelphia",
-        "San Francisco",
-        "San Diego",
-        "Seattle",
-        "Washington D.C.",
-        "Boston",
-        "Dallas",
-        "Atlanta"
-    )
-    private val countryCodes = arrayOf(
-        "RU", // Москва
-        "RU", // Санкт-Петербург
-        "US", // Нью-Йорк
-        "GB", // Лондон
-        "DE", // Берлин
-        "FR", // Париж
-        "JP", // Токио
-        "AU", // Сидней
-        "IT", // Рим
-        "ES", // Мадрид
-        "CA", // Торонто
-        "AE", // Дубай
-        "BE", // Брюссель
-        "HU", // Будапешт
-        "DK", // Копенгаген
-        "SE", // Стокгольм
-        "CH", // Цюрих
-        "KR", // Сеул
-        "TH", // Бангкок
-        "HK", // Гонконг
-        "MX", // Мехико
-        "US", // Лос-Анджелес
-        "US", // Чикаго
-        "US", // Хьюстон
-        "US", // Филадельфия
-        "US", // Сан-Франциско
-        "US", // Сан-Диего
-        "US", // Сиэтл
-        "US", // Вашингтон
-        "US", // Бостон
-        "US", // Даллас
-        "US"  // Атланта
-    )
-
     data class HotelSearchResponse(
         val status: Boolean,
         val message: Any,
         val timestamp: Long,
         val data: HotelData
     )
-    data class Agent(
-        val title: String
-    )
+
     data class HotelData(
         val sortDisclaimer: String,
         val data: List<HotelJson> // Список отелей
@@ -233,12 +85,6 @@ class MainActivity : AppCompatActivity() {
         val documentId: String,
         val trackingItems: String,
         val secondaryText: String
-    )
-    data class CardPhoto(
-        val sizes: PhotoSizes
-    )
-    data class PhotoSizes(
-        val urlTemplate: String // Или другие нужные поля
     )
     private lateinit var eventListView: ListView // Объявляем переменную для ListView
     private lateinit var eventAdapter: EventAdapter
@@ -406,415 +252,6 @@ class MainActivity : AppCompatActivity() {
         val name: String
     )
 
-    data class TrainSearchResponse(
-        val segments: List<TrainSegment>
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            segments = mutableListOf<TrainSegment>().apply {
-                parcel.readTypedList(this, TrainSegment.CREATOR)
-            }
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeTypedList(segments)
-        }
-        override fun describeContents(): Int = 0
-        companion object CREATOR : Parcelable.Creator<TrainSearchResponse> {
-            override fun createFromParcel(parcel: Parcel): TrainSearchResponse = TrainSearchResponse(parcel)
-            override fun newArray(size: Int): Array<TrainSearchResponse?> = arrayOfNulls(size)
-        }
-    }
-
-    data class FlightSearchResponse(
-        val segments: List<FlightSegment>
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            mutableListOf<FlightSegment>().apply {
-                parcel.readList(this, FlightSegment::class.java.classLoader)
-            }
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeList(segments)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<FlightSearchResponse> {
-            override fun createFromParcel(parcel: Parcel) = FlightSearchResponse(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<FlightSearchResponse?>(size)
-        }
-    }
-
-    data class TrainSegment(
-        val arrival: String,
-        val from: Station,
-        val thread: ThreadInfo,
-        val departure_platform: String,
-        val departure: String,
-        val stops: String,
-        val departure_terminal: String?,
-        val to: Station,
-        val has_transfers: Boolean,
-        val tickets_info: TicketsInfo,
-        val duration: Int,
-        val arrival_terminal: String,
-        val start_date: String,
-        val arrival_platform: String // Добавлено новое поле
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            arrival = parcel.readString() ?: "",
-            from = parcel.readParcelable(Station::class.java.classLoader)!!,
-            thread = parcel.readParcelable(ThreadInfo::class.java.classLoader)!!,
-            departure_platform = parcel.readString() ?: "",
-            departure = parcel.readString() ?: "",
-            stops = parcel.readString() ?: "",
-            departure_terminal = parcel.readString(),
-            to = parcel.readParcelable(Station::class.java.classLoader)!!,
-            has_transfers = parcel.readByte() != 0.toByte(),
-            tickets_info = parcel.readParcelable(TicketsInfo::class.java.classLoader)!!,
-            duration = parcel.readInt(),
-            arrival_terminal = parcel.readString() ?: "",
-            start_date = parcel.readString() ?: "",
-            arrival_platform = parcel.readString() ?: "" // Чтение нового поля
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(arrival)
-            parcel.writeParcelable(from, flags)
-            parcel.writeParcelable(thread, flags)
-            parcel.writeString(departure_platform)
-            parcel.writeString(departure)
-            parcel.writeString(stops)
-            parcel.writeString(departure_terminal)
-            parcel.writeParcelable(to, flags)
-            parcel.writeByte(if (has_transfers) 1 else 0)
-            parcel.writeParcelable(tickets_info, flags)
-            parcel.writeInt(duration)
-            parcel.writeString(arrival_terminal)
-            parcel.writeString(start_date)
-            parcel.writeString(arrival_platform) // Запись нового поля
-        }
-        override fun describeContents(): Int = 0
-        companion object CREATOR : Parcelable.Creator<TrainSegment> {
-            override fun createFromParcel(parcel: Parcel): TrainSegment = TrainSegment(parcel)
-            override fun newArray(size: Int): Array<TrainSegment?> = arrayOfNulls(size)
-        }
-    }
-
-
-    data class FlightSegment(
-        val arrival: String,
-        val from: Station,
-        val thread: ThreadInfo,
-        val departure_platform: String,
-        val departure: String,
-        val stops: String,
-        val departure_terminal: String?,
-        val to: Station,
-        val has_transfers: Boolean,
-        val tickets_info: TicketsInfo,
-        val duration: Int,
-        val arrival_terminal: String,
-        val start_date: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readParcelable(Station::class.java.classLoader)!!,
-            parcel.readParcelable(ThreadInfo::class.java.classLoader)!!,
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString(),
-            parcel.readParcelable(Station::class.java.classLoader)!!,
-            parcel.readByte() != 0.toByte(),
-            parcel.readParcelable(TicketsInfo::class.java.classLoader)!!,
-            parcel.readInt(),
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(arrival)
-            parcel.writeParcelable(from, flags)
-            parcel.writeParcelable(thread, flags)
-            parcel.writeString(departure_platform)
-            parcel.writeString(departure)
-            parcel.writeString(stops)
-            parcel.writeString(departure_terminal)
-            parcel.writeParcelable(to, flags)
-            parcel.writeByte(if (has_transfers) 1 else 0)
-            parcel.writeParcelable(tickets_info, flags)
-            parcel.writeInt(duration)
-            parcel.writeString(arrival_terminal)
-            parcel.writeString(start_date)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<FlightSegment> {
-            override fun createFromParcel(parcel: Parcel) = FlightSegment(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<FlightSegment?>(size)
-        }
-    }
-
-    data class Station(
-        val code: String,
-        val title: String,
-        val popular_title: String,
-        val short_title: String,
-        val transport_type: String,
-        val type: String,
-        val station_type: String,
-        val station_type_name: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(code)
-            parcel.writeString(title)
-            parcel.writeString(popular_title)
-            parcel.writeString(short_title)
-            parcel.writeString(transport_type)
-            parcel.writeString(type)
-            parcel.writeString(station_type)
-            parcel.writeString(station_type_name)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<Station> {
-            override fun createFromParcel(parcel: Parcel) = Station(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<Station?>(size)
-        }
-    }
-
-    data class ThreadInfo(
-        val uid: String,
-        val title: String,
-        val number: String,
-        val short_title: String,
-        val thread_method_link: String,
-        val carrier: CarrierInfo,
-        val transport_type: String,
-        val vehicle: String,
-        val transport_subtype: TransportSubtype,
-        val express_type: String?
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readParcelable(CarrierInfo::class.java.classLoader)!!,
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readParcelable(TransportSubtype::class.java.classLoader)!!,
-            parcel.readString()
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(uid)
-            parcel.writeString(title)
-            parcel.writeString(number)
-            parcel.writeString(short_title)
-            parcel.writeString(thread_method_link)
-            parcel.writeParcelable(carrier, flags)
-            parcel.writeString(transport_type)
-            parcel.writeString(vehicle)
-            parcel.writeParcelable(transport_subtype, flags)
-            parcel.writeString(express_type)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<ThreadInfo> {
-            override fun createFromParcel(parcel: Parcel) = ThreadInfo(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<ThreadInfo?>(size)
-        }
-    }
-
-    data class CarrierInfo(
-        val code: Int,
-        val contacts: String,
-        val url: String,
-        val logo_svg: String?,
-        val title: String,
-        val phone: String,
-        val codes: CarrierCodes,
-        val address: String,
-        val logo: String,
-        val email: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readInt(),
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString(),
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readParcelable(CarrierCodes::class.java.classLoader)!!,
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeInt(code)
-            parcel.writeString(contacts)
-            parcel.writeString(url)
-            parcel.writeString(logo_svg)
-            parcel.writeString(title)
-            parcel.writeString(phone)
-            parcel.writeParcelable(codes, flags)
-            parcel.writeString(address)
-            parcel.writeString(logo)
-            parcel.writeString(email)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<CarrierInfo> {
-            override fun createFromParcel(parcel: Parcel) = CarrierInfo(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<CarrierInfo?>(size)
-        }
-    }
-
-    data class CarrierCodes(
-        val icao: String?,
-        val sirena: String,
-        val iata: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(icao)
-            parcel.writeString(sirena)
-            parcel.writeString(iata)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<CarrierCodes> {
-            override fun createFromParcel(parcel: Parcel) = CarrierCodes(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<CarrierCodes?>(size)
-        }
-    }
-
-    data class TicketsInfo(
-        val et_marker: Boolean,
-        val places: List<Place>
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readByte() != 0.toByte(),
-            mutableListOf<Place>().apply { parcel.readList(this, Place::class.java.classLoader) }
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeByte(if (et_marker) 1 else 0)
-            parcel.writeList(places)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<TicketsInfo> {
-            override fun createFromParcel(parcel: Parcel) = TicketsInfo(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<TicketsInfo?>(size)
-        }
-    }
-
-    data class Place(
-        val currency: String,
-        val price: TicketPrice,
-        val name: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readParcelable(TicketPrice::class.java.classLoader)!!,
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(currency)
-            parcel.writeParcelable(price, flags)
-            parcel.writeString(name)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<Place> {
-            override fun createFromParcel(parcel: Parcel) = Place(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<Place?>(size)
-        }
-    }
-
-    data class TicketPrice(
-        val cents: Int,
-        val whole: Int
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readInt(),
-            parcel.readInt()
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeInt(cents)
-            parcel.writeInt(whole)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<TicketPrice> {
-            override fun createFromParcel(parcel: Parcel) = TicketPrice(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<TicketPrice?>(size)
-        }
-    }
-
-    data class TransportSubtype(
-        val color: String,
-        val code: String,
-        val title: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(color)
-            parcel.writeString(code)
-            parcel.writeString(title)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<TransportSubtype> {
-            override fun createFromParcel(parcel: Parcel) = TransportSubtype(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<TransportSubtype?>(size)
-        }
-    }
-
-    data class Page(
-        val size: Int,
-        val totalElements: Int,
-        val totalPages: Int,
-        val number: Int
-    )
-
-
     data class Media(
         val uri: String
     ) : Parcelable {
@@ -851,14 +288,6 @@ class MainActivity : AppCompatActivity() {
     data class Photo(
         val url: String,
         val caption: String?
-    )
-    data class RestaurantDetails(
-        val name: String,
-        val averageRating: String?,
-        val address: String?,
-        val menuUrl: String?,
-        val openingHours: List<String>?, // Это список строк
-        val photos: List<Photo>? // Это список объектов Photo
     )
     data class Location(
         val locationId: String, // ID локации
@@ -907,11 +336,7 @@ class MainActivity : AppCompatActivity() {
             @Query("date") date: String
         ): Call<EventResponse>
     }
-    data class AccessTokenResponse(
-        @SerializedName("access_token") val accessToken: String,
-        @SerializedName("token_type") val tokenType: String,
-        @SerializedName("expires_in") val expiresIn: Int
-    )
+
     interface FoursquareApiService {
         @GET("v3/places/search")
         fun searchRestaurants(
@@ -920,27 +345,6 @@ class MainActivity : AppCompatActivity() {
             @Query("categories") categories: String,  // Поиск по типу кухни
             @Query("limit") limit: Int = 1000           // Лимит результатов (например, 20 ресторанов)
         ): Call<RestaurantSearchResponse>
-    }
-    interface YandexRaspService {
-        @GET("v3.0/search/")
-        fun searchTrain(
-            @Query("from") from: String,
-            @Query("to") to: String,
-            @Query("apikey") apiKey: String,
-            @Query("date") date: String? = null,
-            @Query("transport_types") transportTypes: String = "train",
-            @Query("format") format: String? = "json"
-        ): Call<TrainSearchResponse>
-
-        @GET("v3.0/search/")
-        fun searchFlight(
-            @Query("from") from: String,
-            @Query("to") to: String,
-            @Query("apikey") apiKey: String,
-            @Query("date") date: String? = null,
-            @Query("transport_types") transportTypes: String = "plane",
-            @Query("format") format: String? = "json"
-        ): Call<FlightSearchResponse>
     }
 
     private lateinit var retrofitSecond: Retrofit
@@ -977,75 +381,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var articleManager: ArticleManager
     private lateinit var yandexRaspService: YandexRaspService
-    private val cityTranslations = mapOf(
-        "Москва" to "Moscow",
-        "Амстердам" to "Amsterdam",
-        "Афины" to "Athens",
-        "Барселона" to "Barcelona",
-        "Берлин" to "Berlin",
-        "Брюссель" to "Brussels",
-        "Будапешт" to "Budapest",
-        "Варшава" to "Warsaw",
-        "Вена" to "Vienna",
-        "Гамбург" to "Hamburg",
-        "Женева" to "Geneva",
-        "Копенгаген" to "Copenhagen",
-        "Лиссабон" to "Lisbon",
-        "Лондон" to "London",
-        "Мадрид" to "Madrid",
-        "Милан" to "Milan",
-        "Мюнхен" to "Munich",
-        "Неаполь" to "Naples",
-        "Осло" to "Oslo",
-        "Париж" to "Paris",
-        "Прага" to "Prague",
-        "Рим" to "Rome",
-        "Стокгольм" to "Stockholm",
-        "Хельсинки" to "Helsinki",
-        "Цюрих" to "Zurich",
-        "Эдинбург" to "Edinburgh",
-        "Флоренция" to "Florence",
-        "Венеция" to "Venice",
-        "Манчестер" to "Manchester",
-        "Лион" to "Lyon",
-        "Ницца" to "Nice",
-        "Штутгарт" to "Stuttgart",
-
-        // Северная Америка (США и Канада)
-        "Атланта" to "Atlanta",
-        "Бостон" to "Boston",
-        "Вашингтон" to "Washington",
-        "Ванкувер" to "Vancouver",
-        "Даллас" to "Dallas",
-        "Денвер" to "Denver",
-        "Лас-Вегас" to "Las Vegas",
-        "Лос-Анджелес" to "Los Angeles",
-        "Майами" to "Miami",
-        "Монреаль" to "Montreal",
-        "Нью-Йорк" to "New York",
-        "Орландо" to "Orlando",
-        "Сан-Франциско" to "San Francisco",
-        "Сан-Диего" to "San Diego",
-        "Сиэтл" to "Seattle",
-        "Торонто" to "Toronto",
-        "Чикаго" to "Chicago",
-        "Хьюстон" to "Houston",
-        "Филадельфия" to "Philadelphia",
-        "Финикс" to "Phoenix",
-
-        // Другие крупные города
-        "Буэнос-Айрес" to "Buenos Aires",
-        "Сантьяго" to "Santiago",
-        "Сидней" to "Sydney",
-        "Мельбурн" to "Melbourne",
-        "Токио" to "Tokyo",
-        "Сеул" to "Seoul",
-        "Гонконг" to "Hong Kong",
-        "Сингапур" to "Singapore",
-        "Дубай" to "Dubai",
-        "Йоханнесбург" to "Johannesburg",
-        "Кейптаун" to "Cape Town"
-    )
     private var articleIndex: Int = 0
     private var transportType: String = "plane"
     private val apiKey = "GOar6YtGHaAjqNpicHckvzO4CPtio3LQ"
@@ -1189,7 +524,7 @@ class MainActivity : AppCompatActivity() {
 
         val cityInput: AutoCompleteTextView = findViewById(R.id.input_city_entertainment)
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, cities)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, cityNames)
         cityInput.setAdapter(adapter)
 
         val retrofitTicketmaster = Retrofit.Builder()
@@ -2163,7 +1498,7 @@ private fun selectButton(button: ImageButton) {
         val timeoutRunnable = Runnable {
             Toast.makeText(this@MainActivity, "Извините, мы не можем предоставить результат", Toast.LENGTH_SHORT).show()
         }
-        handler.postDelayed(timeoutRunnable, 60000)
+        handler.postDelayed(timeoutRunnable, 5000)
 
         call.enqueue(object : Callback<FlightSearchResponse> {
             override fun onResponse(

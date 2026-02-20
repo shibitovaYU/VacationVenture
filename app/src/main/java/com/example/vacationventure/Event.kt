@@ -2,7 +2,7 @@ package com.example.vacationventure.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.util.UUID
+import com.example.vacationventure.model.Dates
 
 data class Event(
     val name: String,

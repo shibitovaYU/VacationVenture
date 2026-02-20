@@ -2,9 +2,8 @@ package com.example.vacationventure
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.widget.DatePicker
-import java.util.*
+import java.util.Calendar
 
 class CustomDatePickerDialog(
     context: Context,

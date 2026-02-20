@@ -1,7 +1,8 @@
-package com.example.vacationventure.models
+package com.example.vacationventure.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.vacationventure.models.Start
 
 data class Dates(
     val start: Start = Start()

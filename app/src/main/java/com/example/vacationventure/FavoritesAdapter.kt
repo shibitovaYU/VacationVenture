@@ -1,21 +1,16 @@
 package com.example.vacationventure
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.models.Event
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.widget.Toast
-import java.text.SimpleDateFormat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import java.util.*
-import com.google.firebase.database.*
+import com.example.vacationventure.models.Event
 
 class FavoritesAdapter(
     private val favoritesList: MutableList<Event>,
