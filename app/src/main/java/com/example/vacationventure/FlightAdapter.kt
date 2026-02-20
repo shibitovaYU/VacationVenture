@@ -37,18 +37,19 @@ class FlightAdapter(private val flightSegments: List<FlightSegment>) :
         holder.departureTime.text = departureHourMinute
         holder.departureStation.text = "Аэропорт: ${segment.from.title}" // Станция отправления
 
-        val arrivalHourMinute = segment.arrival.substring(11, 16)
-        holder.arrivalTime.text = arrivalHourMinute
-        holder.arrivalStation.text = "Аэропорт: ${segment.to.title}" // Станция прибытия
+        val arrivalHourMinute       = segment.arrival.substring(11, 16)
+        holder.arrivalTime.text     = arrivalHourMinute
+        holder.arrivalStation.text  = "Аэропорт: ${segment.to.title}" // Станция прибытия
 
-        holder.departureDate.text = segment.start_date
+        holder.departureDate.text   = segment.start_date
+        holder.arrivalDate.text     = segment.arrival.substring(0,10)
 
         val durationHours = segment.duration / 3600 // Часы
         val durationMinutes = (segment.duration % 3600) / 60 // Минуты
         holder.duration.text = "Длительность: $durationHours ч $durationMinutes мин"
 
         holder.detailLink.setOnClickListener {
-            val url = "https://rasp.yandex.ru/"
+            val url = "https://travel.yandex.ru/avia/flights/${segment.thread.number.replace(" ","-")}/?when=${segment.start_date}"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             holder.itemView.context.startActivity(intent)
         }

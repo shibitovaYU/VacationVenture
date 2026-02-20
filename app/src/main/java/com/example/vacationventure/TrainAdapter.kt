@@ -44,13 +44,15 @@ class TrainAdapter(private val trainSegments: List<TrainSegment>) :
         holder.arrivalStation.text = "Станция: ${segment.to.title}" // Станция прибытия
 
         holder.departureDate.text = segment.start_date // Используйте правильную дату отправления
+        holder.arrivalDate.text = segment.arrival.substring(0,10)
 
         // Длительность поездки
         holder.duration.text = "Длительность: ${segment.duration / 3600} ч ${(segment.duration % 3600) / 60} мин"
-
+        holder.arrivalDate.text     = segment.arrival.substring(0,10)
 
         holder.detailLink.setOnClickListener {
-            val url = "https://rasp.yandex.ru/" // Установите здесь свою ссылку
+            // https://travel.yandex.ru/trains/order/?fromId=c43&number=133Г&time=16.10&toId=c2&when=2026-03-25
+            val url = "https://travel.yandex.ru/trains/order/?fromId=$segment."
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             holder.itemView.context.startActivity(intent)
         }

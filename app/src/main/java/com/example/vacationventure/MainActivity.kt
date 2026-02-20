@@ -81,9 +81,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.example.vacationventure.FlightTicket
 import okhttp3.*
 import java.util.*
+import com.google.gson.GsonBuilder
 
 
 private lateinit var retrofit: Retrofit
+
+private const val TAG = "FlightSearch"
 
 class MainActivity : AppCompatActivity() {
 
@@ -1098,9 +1101,8 @@ class MainActivity : AppCompatActivity() {
 
         // Показываем всплывающее окно с предложением статьи при запуске
         loadUserPreferences()
-
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.rasp.yandex.net/")
+            .baseUrl("https://api.rasp.yandex-net.ru/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -2164,22 +2166,38 @@ private fun selectButton(button: ImageButton) {
         handler.postDelayed(timeoutRunnable, 60000)
 
         call.enqueue(object : Callback<FlightSearchResponse> {
-            override fun onResponse(call: Call<FlightSearchResponse>, response: Response<FlightSearchResponse>) {
-                handler.removeCallbacks(timeoutRunnable)  // Останавливаем таймер
+            override fun onResponse(
+                call: Call<FlightSearchResponse>,
+                response: Response<FlightSearchResponse>
+            ) {
+                handler.removeCallbacks(timeoutRunnable)
+
                 if (response.isSuccessful) {
-                    response.body()?.let { flightResponse ->
+                    val flightResponse = response.body()
+                    if (flightResponse != null) {
+                        val gson = GsonBuilder().setPrettyPrinting().create()
+                        Log.d(TAG, "JSON response:\n${gson.toJson(flightResponse)}")
+
                         handleFlightResponse(flightResponse)
-                    } ?: run {
+                    } else {
+                        Log.w(TAG, "Response body is null")
                         Toast.makeText(this@MainActivity, "Ответ пуст", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Ошибка: ${response.code()} - ${response.message()}", Toast.LENGTH_SHORT).show()
+                    // Важно: errorBody().string() можно прочитать только 1 раз
+                    val err = response.errorBody()?.string()
+                    Log.e(TAG, "HTTP ${response.code()} ${response.message()} | errorBody: $err")
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Ошибка: ${response.code()} - ${response.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<FlightSearchResponse>, t: Throwable) {
-                handler.removeCallbacks(timeoutRunnable)  // Останавливаем таймер
-                Toast.makeText(this@MainActivity, "Ошибка: ${t.message}", Toast.LENGTH_SHORT).show()
+                handler.removeCallbacks(timeoutRunnable)
+                Log.e(TAG, "Request failed", t)
             }
         })
     }
