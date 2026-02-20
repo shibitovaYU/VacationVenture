@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.vacationventure.models.Event
+import com.example.vacationventure.feature.events.Event
 
 class FavoritesAdapter(
     private val favoritesList: MutableList<Event>,

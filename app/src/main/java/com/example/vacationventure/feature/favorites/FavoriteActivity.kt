@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.models.Event
-import com.example.vacationventure.models.EventData
+import com.example.vacationventure.feature.events.Event
+import com.example.vacationventure.feature.events.EventData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
