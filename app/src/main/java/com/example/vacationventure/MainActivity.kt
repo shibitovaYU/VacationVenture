@@ -71,164 +71,12 @@ private lateinit var retrofit: Retrofit
 private const val TAG = "FlightSearch"
 
 class MainActivity : AppCompatActivity() {
-    data class Segment(
-        val departure: Departure,
-        val arrival: Arrival,
-        val carrierCode: String,
-        val number: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readParcelable(Departure::class.java.classLoader) ?: Departure("", ""),
-            parcel.readParcelable(Arrival::class.java.classLoader) ?: Arrival("", ""),
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeParcelable(departure, flags)
-            parcel.writeParcelable(arrival, flags)
-            parcel.writeString(carrierCode)
-            parcel.writeString(number)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Segment> {
-            override fun createFromParcel(parcel: Parcel): Segment {
-                return Segment(parcel)
-            }
-            override fun newArray(size: Int): Array<Segment?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-    data class Departure(
-        val iataCode: String,
-        val at: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(iataCode)
-            parcel.writeString(at)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Departure> {
-            override fun createFromParcel(parcel: Parcel): Departure {
-                return Departure(parcel)
-            }
-
-            override fun newArray(size: Int): Array<Departure?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-    data class Arrival(
-        val iataCode: String,
-        val at: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(iataCode)
-            parcel.writeString(at)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Arrival> {
-            override fun createFromParcel(parcel: Parcel): Arrival {
-                return Arrival(parcel)
-            }
-
-            override fun newArray(size: Int): Array<Arrival?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    data class Contact(
-        val phone: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: ""
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(phone)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Contact> {
-            override fun createFromParcel(parcel: Parcel): Contact {
-                return Contact(parcel)
-            }
-            override fun newArray(size: Int): Array<Contact?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    data class Offer(
-        val price: Price
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readParcelable(Price::class.java.classLoader) ?: Price(0.0)
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeParcelable(price, flags)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Offer> {
-            override fun createFromParcel(parcel: Parcel): Offer {
-                return Offer(parcel)
-            }
-
-            override fun newArray(size: Int): Array<Offer?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    data class Price(
-        val total: Double
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readDouble()
-        )
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeDouble(total)
-        }
-        override fun describeContents(): Int {
-            return 0
-        }
-        companion object CREATOR : Parcelable.Creator<Price> {
-            override fun createFromParcel(parcel: Parcel): Price {
-                return Price(parcel)
-            }
-
-            override fun newArray(size: Int): Array<Price?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
     data class EventResponse(
         val _embedded: EmbeddedEvents? // Убедитесь, что используется `EmbeddedEvents?` для обработки возможных null-значений
     )
 
     data class EmbeddedEvents(
         val events: List<Event> // Список событий
-    )
-    data class EmbeddedVenues(
-        val venues: List<Venue>
     )
 
     data class Venue(
@@ -267,10 +115,6 @@ class MainActivity : AppCompatActivity() {
         val totalRecords: Int,
         val totalPages: Int,
         val data: List<Restaurant>
-    )
-    data class Photo(
-        val url: String,
-        val caption: String?
     )
     data class Location(
         val locationId: String, // ID локации
