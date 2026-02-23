@@ -10,59 +10,63 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.vacationventure.feature.events.Event
+import com.example.vacationventure.model.FlightSegment
+import com.example.vacationventure.model.dto.FlightFavorite.FlightFavoriteData
+import com.example.vacationventure.models.Event
 
 class FavoritesAdapter(
-    private val favoritesList: MutableList<Event>,
-    private val onFavoriteClick: (Event) -> Unit // Лямбда для обработки кликов по иконке
+    private val favoritesList: MutableList<Pair<String, FlightFavoriteData>>,
+    private val onRemoveClick: (String, FlightFavoriteData) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_favorite, parent, false)
+            .inflate(R.layout.item_flight, parent, false)
         return FavoriteViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        val event = favoritesList[position]
-        holder.bind(event)
+        val (key, dto) = favoritesList[position]
+
+        holder.title.text = dto.title
+
+
+        // ISO "2026-02-24T00:20:00+03:00" -> "00:20"
+        holder.departureTime.text = dto.departure.takeIf { it.length >= 16 }?.substring(11, 16) ?: dto.departure
+        holder.arrivalTime.text = dto.arrival.takeIf { it.length >= 16 }?.substring(11, 16) ?: dto.arrival
+
+        holder.departureStation.text = "Аэропорт: ${dto.fromTitle}"
+        holder.arrivalStation.text = "Аэропорт: ${dto.toTitle}"
+
+        holder.departureDate.text = dto.startDate
+        holder.arrivalDate.text = dto.arrival.takeIf { it.length >= 10 }?.substring(0, 10) ?: dto.arrival
+
+        val hours = dto.duration / 3600
+        val minutes = (dto.duration % 3600) / 60
+        holder.duration.text = "Длительность: $hours ч $minutes мин"
+
+        holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_filled)
+        holder.favoriteIcon.setOnClickListener { onRemoveClick(key, dto) }
+
+        holder.detailLink.setOnClickListener {
+            val url = "https://travel.yandex.ru/avia/flights/${dto.number.replace(" ", "-")}/?when=${dto.startDate}"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = favoritesList.size
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val eventImage: ImageView = itemView.findViewById(R.id.event_image)
-        private val eventName: TextView = itemView.findViewById(R.id.event_name)
-        private val eventDate: TextView = itemView.findViewById(R.id.event_date)
-        private val eventVenue: TextView = itemView.findViewById(R.id.event_venue)
-        private val eventLink: TextView = itemView.findViewById(R.id.event_link)
-        private val favoriteIcon: ImageView = itemView.findViewById(R.id.favorite_icon)
-
-        fun bind(event: Event) {
-            eventName.text = event.name
-            eventDate.text = "Дата: ${event.dates.start.localDate}"
-            eventVenue.text = "Место: ${event._embedded.venues[0].name}"
-
-            Glide.with(itemView.context).load(event.images.firstOrNull()?.url).into(eventImage)
-
-            favoriteIcon.setImageResource(R.drawable.ic_favorite_filled)
-
-            val eventUrl = event.url
-            eventLink.text = "Подробнее"
-            eventLink.setTextColor(Color.BLUE)
-            eventLink.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(eventUrl))
-                itemView.context.startActivity(browserIntent)  // Используем itemView.context для вызова startActivity
-            }
-
-            favoriteIcon.setOnClickListener {
-                onFavoriteClick(event)
-            }
-
-            itemView.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.url))
-                itemView.context.startActivity(intent)
-            }
-        }
+        val title: TextView = itemView.findViewById(R.id.title)
+        val departureTime: TextView = itemView.findViewById(R.id.departureTime)
+        val departureStation: TextView = itemView.findViewById(R.id.departureStation)
+        val departureDate: TextView = itemView.findViewById(R.id.departureDate)
+        val arrivalTime: TextView = itemView.findViewById(R.id.arrivalTime)
+        val arrivalStation: TextView = itemView.findViewById(R.id.arrivalStation)
+        val arrivalDate: TextView = itemView.findViewById(R.id.arrivalDate)
+        val duration: TextView = itemView.findViewById(R.id.duration)
+        val detailLink: TextView = itemView.findViewById(R.id.detail_link)
+        val favoriteIcon: ImageView = itemView.findViewById(R.id.favorite_icon)
     }
 }

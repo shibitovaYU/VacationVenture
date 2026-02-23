@@ -8,8 +8,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vacationventure.model.FlightSegment
+import android.widget.ImageView
 
-class FlightAdapter(private val flightSegments: List<FlightSegment>) :
+
+class FlightAdapter(
+    private val flightSegments: List<FlightSegment>,
+    private val onFavoriteClick: (FlightSegment, ImageView) -> Unit,
+    private val onDetailsClick: (FlightSegment) -> Unit,
+    private val onBindFavoriteState: (FlightSegment, ImageView) -> Unit) :
     RecyclerView.Adapter<FlightAdapter.FlightViewHolder>() {
 
     class FlightViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,6 +28,7 @@ class FlightAdapter(private val flightSegments: List<FlightSegment>) :
         val arrivalDate: TextView = itemView.findViewById(R.id.arrivalDate)
         val duration: TextView = itemView.findViewById(R.id.duration)
         val detailLink: TextView = itemView.findViewById(R.id.detail_link)
+        val favoriteIcon: ImageView = itemView.findViewById(R.id.favorite_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightViewHolder {
@@ -48,7 +55,17 @@ class FlightAdapter(private val flightSegments: List<FlightSegment>) :
         val durationMinutes = (segment.duration % 3600) / 60 // Минуты
         holder.duration.text = "Длительность: $durationHours ч $durationMinutes мин"
 
+        // ✅ как checkIfFavorite(event, icon) — но делаем через callback в Activity
+        onBindFavoriteState(segment, holder.favoriteIcon)
+
+        // ✅ клик по сердцу — зовём Activity
+        holder.favoriteIcon.setOnClickListener {
+            onFavoriteClick(segment, holder.favoriteIcon)
+        }
+
         holder.detailLink.setOnClickListener {
+            onDetailsClick(segment)
+
             val url = "https://travel.yandex.ru/avia/flights/${segment.thread.number.replace(" ","-")}/?when=${segment.start_date}"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             holder.itemView.context.startActivity(intent)

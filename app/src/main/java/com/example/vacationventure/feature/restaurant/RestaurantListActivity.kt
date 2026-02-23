@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.feature.favorites.FavoriteActivity
+import com.example.vacationventure.FavoriteActivity
 
 class RestaurantListActivity : AppCompatActivity() {
 

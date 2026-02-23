@@ -8,9 +8,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.vacationventure.feature.auth.LogInActivity
-import com.example.vacationventure.feature.favorites.FavoriteActivity
-import com.example.vacationventure.feature.profile.EditProfileActivity
+import com.example.vacationventure.LogInActivity
+import com.example.vacationventure.FavoriteActivity
+import com.example.vacationventure.EditProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -83,6 +83,7 @@ class ProfileActivity : AppCompatActivity() {
                     // Установка значений в TextView
                     userNameTextView.text = name ?: "Имя не найдено"
                     userEmailTextView.text = email ?: "Email не найден"
+                    Log.e("ProfileEmail", "email=$email")
                 } else {
                     Log.d("ProfileActivity", "Пользователь не найден в базе данных")
                     userNameTextView.text = "Имя не найдено"
