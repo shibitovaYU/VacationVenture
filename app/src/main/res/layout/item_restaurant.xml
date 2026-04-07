@@ -1,57 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_marginBottom="16dp"
-    android:background="@drawable/item_background"
-    android:textColor="@color/black"
-    android:textColorHint="@color/grey">
-
-    <!-- Изображение ресторана, занимающее всю ширину -->
-    <ImageView
-        android:id="@+id/restaurantImage"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="Restaurant Image"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Основная информация о ресторане -->
-    <TextView
-        android:id="@+id/restaurantName"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:paddingBottom="4dp"
-        android:text="Название ресторана"
-        android:textColor="@color/black"/>
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="6dp"
+        android:background="@drawable/item_background"
+        android:elevation="4dp"
+        android:translationZ="2dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey">
 
-    <TextView
-        android:id="@+id/restaurantAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
-        android:text="Адрес ресторана"
-        android:textColor="@color/black"/>
+    <ImageView
+            android:id="@+id/restaurant_image"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Изображение ресторана" />
 
     <TextView
-        android:id="@+id/restaurantRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:text="Рейтинг: 4.5"
-        android:textColor="@color/black"/>
+            android:id="@+id/restaurant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:textSize="24sp"
+            android:text="Название ресторана"
+            android:textColor="@color/black"/>
 
     <TextView
-        android:id="@+id/restaurantMenuLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Меню ресторана"
-        android:textColor="@color/darkblue"
-        android:textSize="16sp"
-        android:paddingBottom="8dp" />
+            android:id="@+id/restaurant_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Средний чек: —"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+    <TextView
+            android:id="@+id/restaurant_cuisine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Кухня: —"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+    <TextView
+            android:id="@+id/restaurant_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Статус: —"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+    <TextView
+            android:id="@+id/restaurant_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Рейтинг: —"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/review_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#E3F2FD">
+
+        <TextView
+                android:id="@+id/restaurant_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Отзыв"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:maxLines="3"
+                android:ellipsize="end"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+            android:id="@+id/menu_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Меню"
+            android:textColor="@color/darkblue"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginTop="12dp" />
+
+    <TextView
+            android:id="@+id/event_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Подробнее"
+            android:textColor="@color/darkblue"
+            android:textSize="16sp"
+            android:layout_marginTop="6dp"
+            android:visibility="gone" />
 
 </LinearLayout>

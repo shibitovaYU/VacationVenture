@@ -4,48 +4,69 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Restaurant(
-    val name: String,                       // Имя ресторана
-    val restaurantsId: String,              // ID ресторана
-    val averageRating: Double,              // Средний рейтинг
-    val userReviewCount: Int,               // Количество отзывов пользователей
-    val currentOpenStatusText: String?,      // Текстовое описание статуса ресторана
-    val priceTag: String?,                  // Уровень цен (может быть null)
-    val menuUrl: String?,                   // URL меню (если доступно)
-    val heroImgUrl: String?                 // URL главного изображения ресторана
+    val locationId: Long,
+    val name: String,
+    val heroImgUrl: String? = null,
+
+    val averageRating: Double? = null,
+    val userReviewCount: Int? = null,
+
+    val currentOpenStatusCategory: String? = null,
+    val currentOpenStatusText: String? = null,
+
+    val priceTag: String? = null,
+    val cuisines: List<String> = emptyList(),
+    val parentGeoName: String? = null,
+
+    val menuUrl: String? = null,
+    val reviewSnippet: String? = null,
+    val reviewUrl: String? = null
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",                  // Чтение имени ресторана
-        parcel.readString() ?: "",                  // Чтение ID ресторана
-        parcel.readDouble(),                        // Чтение среднего рейтинга
-        parcel.readInt(),                           // Чтение количества отзывов
-        parcel.readString() ?: "",                  // Чтение текста статуса
-        parcel.readString(),                        // Чтение уровня цен (если есть)
-        parcel.readString(),                        // Чтение URL меню (если есть)
-        parcel.readString()                         // Чтение URL изображения (если есть)
+        locationId = parcel.readLong(),
+        name = parcel.readString().orEmpty(),
+        heroImgUrl = parcel.readString(),
+
+        averageRating = parcel.readValue(Double::class.java.classLoader) as? Double,
+        userReviewCount = parcel.readValue(Int::class.java.classLoader) as? Int,
+
+        currentOpenStatusCategory = parcel.readString(),
+        currentOpenStatusText = parcel.readString(),
+
+        priceTag = parcel.readString(),
+        cuisines = parcel.createStringArrayList() ?: emptyList(),
+        parentGeoName = parcel.readString(),
+
+        menuUrl = parcel.readString(),
+        reviewSnippet = parcel.readString(),
+        reviewUrl = parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)                    // Запись имени ресторана
-        parcel.writeString(restaurantsId)           // Запись ID ресторана
-        parcel.writeDouble(averageRating)           // Запись среднего рейтинга
-        parcel.writeInt(userReviewCount)            // Запись количества отзывов
-        parcel.writeString(currentOpenStatusText)   // Запись текста статуса
-        parcel.writeString(priceTag)                // Запись уровня цен
-        parcel.writeString(menuUrl)                 // Запись URL меню
-        parcel.writeString(heroImgUrl)              // Запись URL изображения
+        parcel.writeLong(locationId)
+        parcel.writeString(name)
+        parcel.writeString(heroImgUrl)
+
+        parcel.writeValue(averageRating)
+        parcel.writeValue(userReviewCount)
+
+        parcel.writeString(currentOpenStatusCategory)
+        parcel.writeString(currentOpenStatusText)
+
+        parcel.writeString(priceTag)
+        parcel.writeStringList(cuisines)
+        parcel.writeString(parentGeoName)
+
+        parcel.writeString(menuUrl)
+        parcel.writeString(reviewSnippet)
+        parcel.writeString(reviewUrl)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Restaurant> {
-        override fun createFromParcel(parcel: Parcel): Restaurant {
-            return Restaurant(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Restaurant?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel): Restaurant = Restaurant(parcel)
+        override fun newArray(size: Int): Array<Restaurant?> = arrayOfNulls(size)
     }
 }

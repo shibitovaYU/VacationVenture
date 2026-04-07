@@ -64,6 +64,9 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.X509TrustManager
 import kotlin.concurrent.thread
 import kotlin.concurrent.timer
+import androidx.core.text.HtmlCompat
+import com.google.gson.annotations.SerializedName
+import java.net.URLDecoder
 
 
 private lateinit var retrofit: Retrofit
@@ -109,12 +112,44 @@ class MainActivity : AppCompatActivity() {
     data class RestaurantSearchResponse(
         val status: Boolean,
         val message: String,
+        val timestamp: Long? = null,
         val data: RestaurantData
     )
+
     data class RestaurantData(
-        val totalRecords: Int,
-        val totalPages: Int,
-        val data: List<Restaurant>
+        val totalRecords: String? = null,   // важно: в ответе строка "13862"
+        val totalPages: Int? = null,
+        val data: List<RestaurantApiItem>
+    )
+
+    data class RestaurantApiItem(
+        val heroImgUrl: String? = null,
+        val locationId: Long,
+        val name: String,
+
+        val averageRating: Double? = null,
+        val userReviewCount: Int? = null,
+
+        val currentOpenStatusCategory: String? = null,
+        val currentOpenStatusText: String? = null,
+
+        @SerializedName("establishmentTypeAndCuisineTags")
+        val cuisines: List<String>? = null,
+
+        val priceTag: String? = null,
+        val menuUrl: String? = null,
+        val parentGeoName: String? = null,
+
+        val reviewSnippets: ReviewSnippets? = null
+    )
+
+    data class ReviewSnippets(
+        val reviewSnippetsList: List<ReviewSnippet>? = null
+    )
+
+    data class ReviewSnippet(
+        val reviewText: String? = null,
+        val reviewUrl: String? = null
     )
     data class Location(
         val locationId: String, // ID локации
@@ -149,10 +184,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     data class LocationResponse(
-        val data: List<Location>
+        val data: List<Location>? = null
     )
+
     data class GeoResponse(
-        val data: List<Geo>
+        val data: List<Geo>? = null
     )
 
     interface TicketmasterApi {
@@ -401,12 +437,12 @@ class MainActivity : AppCompatActivity() {
                 buttonFood -> searchLocation(translatedCityFood, "restaurant")
                 buttonEnter -> searchEvents(cityEvent,date)
 
-        }
+            }
 
         }
-}
+    }
 
-private fun selectButton(button: ImageButton) {
+    private fun selectButton(button: ImageButton) {
         selectedButton?.isSelected = false
         selectedButton?.setBackgroundResource(R.drawable.button_selector)
 
@@ -507,28 +543,28 @@ private fun selectButton(button: ImageButton) {
         fun searchLocation(
             @Query("query") city: String,
             @Header("x-rapidapi-host") host: String = "tripadvisor16.p.rapidapi.com",
-            @Header("x-rapidapi-key") apiKey: String = "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c" // Ваш ключ API
+            @Header("x-rapidapi-key") apiKey: String = "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04" // Ваш ключ API
         ): Call<LocationResponse>
 
         @GET("/api/v1/hotels/searchHotels")
         fun searchGeo(
             @Query("query") cityHotel: String,
             @Header("x-rapidapi-host") host: String = "tripadvisor16.p.rapidapi.com",
-            @Header("x-rapidapi-key") apiKey: String = "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c" // Ваш ключ API
+            @Header("x-rapidapi-key") apiKey: String = "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04" // Ваш ключ API
         ): Call<GeoResponse>
 
         @GET("/api/v1/restaurant/searchRestaurants")
         fun searchRestaurants(
             @Query("locationId") locationId: String,
             @Header("x-rapidapi-host") host: String = "tripadvisor16.p.rapidapi.com",
-            @Header("x-rapidapi-key") apiKey: String = "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c" // Ваш ключ API
+            @Header("x-rapidapi-key") apiKey: String = "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04" // Ваш ключ API
         ): Call<RestaurantSearchResponse>
 
         @GET("/api/v1/hotels/searchHotels")
         fun searchHotels(
             @Query("geoId") geoId: String,
             @Header("x-rapidapi-host") host: String = "tripadvisor16.p.rapidapi.com",
-            @Header("x-rapidapi-key") apiKey: String = "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c" // Ваш ключ API
+            @Header("x-rapidapi-key") apiKey: String = "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04" // Ваш ключ API
         ): Call<HotelSearchResponse>
     }
     private fun setLocale(languageCode: String) {
@@ -567,7 +603,7 @@ private fun selectButton(button: ImageButton) {
         val requestTrip = Request.Builder()
             .url(url)
             .get()
-            .addHeader("x-rapidapi-key", "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c") // Замените на ваш API ключ
+            .addHeader("x-rapidapi-key", "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04") // Замените на ваш API ключ
             .addHeader("x-rapidapi-host", "tripadvisor16.p.rapidapi.com")
             .build()
 
@@ -616,7 +652,7 @@ private fun selectButton(button: ImageButton) {
         val requestTrip = Request.Builder()
             .url(url)
             .get()
-            .addHeader("x-rapidapi-key", "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c") // Замените на ваш API ключ
+            .addHeader("x-rapidapi-key", "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04") // Замените на ваш API ключ
             .addHeader("x-rapidapi-host", "tripadvisor16.p.rapidapi.com")
             .build()
 
@@ -670,7 +706,7 @@ private fun selectButton(button: ImageButton) {
         val requestSearch = Request.Builder()
             .url("https://tripadvisor16.p.rapidapi.com/api/v1/restaurant/searchRestaurants?locationId=$locationId")
             .get()
-            .addHeader("x-rapidapi-key", "c629611588msh1e8deae2c3f5133p1e3c9bjsn6797017ed79c") // Ваш API ключ
+            .addHeader("x-rapidapi-key", "15f8041944mshb0f23de9c009223p1db828jsnf5a543a6da04") // Ваш API ключ
             .addHeader("x-rapidapi-host", "tripadvisor16.p.rapidapi.com")
             .build()
 
@@ -725,35 +761,63 @@ private fun selectButton(button: ImageButton) {
         }
     }
     private fun parseLocationId(responseData: String?): String? {
-        if (responseData.isNullOrEmpty()) return null
-        val gson = Gson()
-        val locationResponse = gson.fromJson(responseData, LocationResponse::class.java)
-        return locationResponse.data.firstOrNull()?.locationId
+        if (responseData.isNullOrBlank()) return null
+
+        return try {
+            val gson = Gson()
+            val locationResponse = gson.fromJson(responseData, LocationResponse::class.java)
+            locationResponse?.data.orEmpty().firstOrNull()?.locationId
+        } catch (e: Exception) {
+            Log.e("parseLocationId", "Ошибка парсинга locationId. Ответ: $responseData", e)
+            null
+        }
     }
+
     private fun parseGeoId(responseData: String?): String? {
-        if (responseData.isNullOrEmpty()) return null
-        val gson = Gson()
-        val geoResponse = gson.fromJson(responseData, GeoResponse::class.java)
-        return geoResponse.data.firstOrNull()?.geoId
+        if (responseData.isNullOrBlank()) return null
+
+        return try {
+            val gson = Gson()
+            val geoResponse = gson.fromJson(responseData, GeoResponse::class.java)
+            geoResponse?.data.orEmpty().firstOrNull()?.geoId
+        } catch (e: Exception) {
+            Log.e("parseGeoId", "Ошибка парсинга geoId. Ответ: $responseData", e)
+            null
+        }
     }
     private fun parseRestaurants(responseData: String?): List<Restaurant> {
-        if (responseData.isNullOrEmpty()) return emptyList() // Возвращаем пустой список, если данных нет
+        if (responseData.isNullOrEmpty()) return emptyList()
 
-        val gson = Gson()
-        val restaurantResponse = gson.fromJson(responseData, RestaurantSearchResponse::class.java)
+        return try {
+            val gson = Gson()
+            val resp = gson.fromJson(responseData, RestaurantSearchResponse::class.java)
 
-        return restaurantResponse.data.data.map {
-            Log.d("MainActivity", "Restaurant data: Name: ${it.name}, ID: ${it.restaurantsId}, Rating: ${it.averageRating}, userReviewCount: ${it.userReviewCount}, price: ${it.priceTag}")
-            Restaurant(
-                name = it.name,
-                restaurantsId = it.restaurantsId,
-                averageRating = it.averageRating,            // Средний рейтинг
-                userReviewCount = it.userReviewCount,        // Количество отзывов
-                currentOpenStatusText = it.currentOpenStatusText, // Статус ресторана
-                priceTag = it.priceTag,                      // Уровень цен
-                menuUrl = it.menuUrl,                        // URL меню (если есть)
-                heroImgUrl = it.heroImgUrl                // Главное изображение (если есть)
-            )
+            resp.data.data.map { item ->
+                val first = item.reviewSnippets?.reviewSnippetsList?.firstOrNull()
+
+                Restaurant(
+                    locationId = item.locationId,
+                    name = item.name,
+                    heroImgUrl = item.heroImgUrl,
+
+                    averageRating = item.averageRating,
+                    userReviewCount = item.userReviewCount,
+
+                    currentOpenStatusCategory = item.currentOpenStatusCategory,
+                    currentOpenStatusText = item.currentOpenStatusText,
+
+                    priceTag = item.priceTag,
+                    cuisines = item.cuisines ?: emptyList(),
+                    parentGeoName = item.parentGeoName,
+
+                    menuUrl = normalizeUrl(item.menuUrl),
+                    reviewSnippet = cleanSnippet(first?.reviewText),
+                    reviewUrl = normalizeUrl(first?.reviewUrl)
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("parseRestaurants", "Parse error: ${e.message}", e)
+            emptyList()
         }
     }
     private fun showRestaurants(restaurants: List<Restaurant>) {
@@ -1206,7 +1270,7 @@ private fun selectButton(button: ImageButton) {
         startActivity(intent)
     }
 }
-    private val mainHandler = Handler(Looper.getMainLooper())
+private val mainHandler = Handler(Looper.getMainLooper())
 
 private fun showErrorDialogHotels(context: Context, message: String) {
     mainHandler.post {
@@ -1217,3 +1281,34 @@ private fun showErrorDialogHotels(context: Context, message: String) {
             .show()
     }
 }
+
+private fun cleanSnippet(raw: String?): String? {
+    if (raw.isNullOrBlank()) return null
+    return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        .toString()
+        .replace(Regex("\\s+"), " ")
+        .trim()
+        .takeIf { it.isNotBlank() }
+}
+
+private fun normalizeUrl(raw: String?): String? {
+    if (raw.isNullOrBlank()) return null
+    var url = raw.trim()
+
+    // TripAdvisor reviewUrl часто относительный
+    if (url.startsWith("/")) {
+        url = "https://www.tripadvisor.com$url"
+    }
+
+    // чинит двойную кодировку типа %25C3%25A9
+    if (url.contains("%25")) {
+        try { url = URLDecoder.decode(url, "UTF-8") } catch (_: Exception) {}
+    }
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://$url"
+    }
+    return url
+}
+
+
