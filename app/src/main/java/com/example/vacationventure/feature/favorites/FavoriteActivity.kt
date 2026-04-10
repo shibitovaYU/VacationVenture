@@ -1,10 +1,9 @@
 package com.example.vacationventure
 
-import RecoEventSender
-import RecoTracker
+import com.example.vacationventure.network.recommendations.RecoEventSender
+import com.example.vacationventure.network.recommendations.RecoTracker
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -12,17 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vacationventure.model.FlightSegment
 import com.example.vacationventure.model.dto.FlightFavorite.FlightFavoriteData
 import com.example.vacationventure.model.dto.recommendations.EventType
-import com.example.vacationventure.models.Event
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 
 class FavoriteActivity : AppCompatActivity() {

@@ -1,3 +1,5 @@
+package com.example.vacationventure.network.recommendations
+
 import android.util.Log
 import com.example.vacationventure.model.FlightSegment
 import com.example.vacationventure.model.dto.FlightFavorite.FlightFavoriteData

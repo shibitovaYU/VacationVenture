@@ -1,5 +1,4 @@
-// RecoNetwork.kt
-import com.example.vacationventure.network.recommendations.RecoApi
+package com.example.vacationventure.network.recommendations// RecoNetwork.kt
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,7 +8,7 @@ object RecoNetwork {
 
     // Emulator: "http://10.0.2.2:8000/"
     // Phone:    "http://192.168.0.10:8000/"
-    private const val BASE_URL = "http://192.168.0.111:8000/"
+    private const val BASE_URL = "http://10.0.2.2:8000/"
 
     private val okHttp by lazy {
         val logger = HttpLoggingInterceptor().apply {

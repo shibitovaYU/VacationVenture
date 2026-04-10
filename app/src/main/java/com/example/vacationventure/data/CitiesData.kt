@@ -292,3 +292,30 @@ val cityMap = mapOf(
     "Даллас" to Pair("Dallas", "US"),
     "Атланта" to Pair("Atlanta", "US")
 )
+
+val airlineTranslations = mapOf(
+    "FV" to "Россия",
+    "SU" to "Аэрофлот",
+    "S7" to "S7 Airlines",
+    "DP" to "Победа",
+    "U6" to "Уральские авиалинии",
+    "UT" to "ЮТэйр",
+    "WZ" to "Red Wings",
+    "N4" to "Nordwind Airlines",
+    "EO" to "Икар",
+    "YC" to "Ямал",
+    "5N" to "Smartavia",
+    "B2" to "Белавиа",
+    "TK" to "Turkish Airlines",
+    "PC" to "Pegasus Airlines",
+    "EK" to "Emirates",
+    "EY" to "Etihad Airways",
+    "QR" to "Qatar Airways",
+    "KL" to "KLM",
+    "AF" to "Air France",
+    "LH" to "Lufthansa",
+    "LX" to "SWISS",
+    "OS" to "Austrian Airlines",
+    "JU" to "Air Serbia",
+    "A3" to "Aegean Airlines"
+)

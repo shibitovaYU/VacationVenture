@@ -65,7 +65,12 @@ import javax.net.ssl.X509TrustManager
 import kotlin.concurrent.thread
 import kotlin.concurrent.timer
 import androidx.core.text.HtmlCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.vacationventure.data.airlineTranslations
+import com.example.vacationventure.model.dto.recommendations.RecoProfileResponse
+import com.example.vacationventure.network.recommendations.RecoProfileSender
 import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 
@@ -249,6 +254,8 @@ class MainActivity : AppCompatActivity() {
     private val apiKey = "GOar6YtGHaAjqNpicHckvzO4CPtio3LQ"
     private val tag = "TicketSearch"
 
+    private val recoProfileSender = RecoProfileSender()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLocale("ru")
@@ -263,6 +270,8 @@ class MainActivity : AppCompatActivity() {
         inputCheckInDateEditText = findViewById(R.id.input_checkin_date)
         inputDateEntertainmentEditText = findViewById(R.id.input_date_entertainment)
         inputCityRestaurantEventEditText = findViewById(R.id.input_city_restaurant_event)
+
+        loadRecoProfile()
 
         departureDateEditText.setOnClickListener {
             showDatePicker(departureDateEditText)
@@ -1185,7 +1194,6 @@ class MainActivity : AppCompatActivity() {
                     val flightResponse = response.body()
                     if (flightResponse != null) {
                         val gson = GsonBuilder().setPrettyPrinting().create()
-                        Log.d(TAG, "JSON response:\n${gson.toJson(flightResponse)}")
 
                         handleFlightResponse(flightResponse)
                     } else {
@@ -1269,6 +1277,58 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("flightResponse", flightResponse)
         startActivity(intent)
     }
+
+
+    private fun loadRecoProfile() {
+        lifecycleScope.launch {
+            val profile = recoProfileSender.getProfile()
+
+            if (profile == null) {
+                Log.w("FlightTicketsActivity", "Reco profile is null")
+                return@launch
+            }
+
+            bindRecoProfile(profile)
+        }
+    }
+
+    private fun bindRecoProfile(profile: RecoProfileResponse) {
+        // @TODO: замениь на реальные id из layout
+//        val preferredDepartureTimeText = findViewById<TextView>(R.id.preferred_departure_time_text)
+//        val recommendedDepartureCityText = findViewById<TextView>(R.id.recommended_departure_city_text)
+//        val favoriteAirlineText = findViewById<TextView>(R.id.favorite_airline_text)
+//        val eventCountText = findViewById<TextView>(R.id.event_count_text)
+
+//        preferredDepartureTimeText.text =
+//            profile.preferredDepartureTime?.value ?: "—"
+//
+//        recommendedDepartureCityText.text =
+//            profile.recommendedDepartureCity?.value ?: "—"
+//
+//        favoriteAirlineText.text =
+//            profile.favoriteAirline?.value ?: "—"
+//
+//        eventCountText.text = profile.eventCount.toString()
+
+        // Если потом захочешь выводить score:
+        // preferredDepartureTimeScore.text = profile.preferredDepartureTime?.score?.toString() ?: "—"
+        // recommendedDepartureCityScore.text = profile.recommendedDepartureCity?.score?.toString() ?: "—"
+        // favoriteAirlineScore.text = profile.favoriteAirline?.score?.toString() ?: "—"
+
+        Log.d(
+            "FlightTicketsActivity",
+            """
+        Reco profile loaded:
+        userId=${profile.userId}
+        eventCount=${profile.eventCount}
+        preferredDepartureTime=${profile.preferredDepartureTime}
+        recommendedDepartureCity=${profile.recommendedDepartureCity}
+        favoriteAirlineCode=${profile.favoriteAirline}
+        favoriteAirlineName=${profile.favoriteAirline?.value?.let { getAirlineName(it) } ?: "—"}
+        """.trimIndent()
+        )
+
+    }
 }
 private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -1311,4 +1371,6 @@ private fun normalizeUrl(raw: String?): String? {
     return url
 }
 
-
+fun getAirlineName(code: String): String {
+    return airlineTranslations[code] ?: code
+}

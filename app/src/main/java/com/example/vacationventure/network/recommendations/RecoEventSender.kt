@@ -1,7 +1,6 @@
-// RecoEventSender.kt
+package com.example.vacationventure.network.recommendations// RecoEventSender.kt
 import android.util.Log
 import com.example.vacationventure.model.dto.recommendations.RecoEvent
-import com.example.vacationventure.network.recommendations.RecoApi
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await

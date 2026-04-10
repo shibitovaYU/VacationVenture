@@ -1,7 +1,7 @@
 package com.example.vacationventure
 
-import RecoEventSender
-import RecoTracker
+import com.example.vacationventure.network.recommendations.RecoEventSender
+import com.example.vacationventure.network.recommendations.RecoTracker
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -18,9 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.vacationventure.model.FlightSegment
 import com.example.vacationventure.model.dto.FlightFavorite.FlightFavoriteData
 import com.example.vacationventure.model.dto.recommendations.EventType
-import com.example.vacationventure.model.dto.recommendations.ItemSnapshot
-import com.example.vacationventure.model.dto.recommendations.RecoEvent
-import com.example.vacationventure.model.dto.recommendations.SearchContext
+import com.example.vacationventure.model.dto.recommendations.RecoProfileResponse
+import com.example.vacationventure.network.recommendations.RecoProfileSender
 import com.google.firebase.database.*
 import kotlinx.coroutines.launch
 
@@ -172,5 +171,6 @@ class FlightTicketsActivity : TicketsActivity() {
             }
         })
     }
+
 
 }
