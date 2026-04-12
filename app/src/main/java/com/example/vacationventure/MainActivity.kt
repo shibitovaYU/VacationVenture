@@ -227,23 +227,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var departureDateEditText: EditText
     private lateinit var departureLocationEditText: AutoCompleteTextView
+    private lateinit var recommendationsText: TextView
     private lateinit var arrivalLocationEditText: AutoCompleteTextView
-    private lateinit var inputPassengersEditText: EditText
-
-    private lateinit var cuisineSpinner: Spinner
-    private lateinit var ageCategorySpinner: Spinner
     private lateinit var eventDateEditText: EditText
     private lateinit var inputCheckOutDateEditText: EditText
     private lateinit var inputCheckInDateEditText: EditText
     private lateinit var inputDateEntertainmentEditText: EditText
     private lateinit var inputCityEditText: EditText
     private lateinit var inputVisitorsEditText: EditText
-    private lateinit var tripAdvisorApiService: TripAdvisorApiService
     private lateinit var inputCityRestaurantEventEditText: EditText
-    private lateinit var spinnerCuisine: Spinner
     private lateinit var eventCityEditText:EditText
-    private lateinit var noResultsView: LinearLayout
-    private lateinit var noResultsTextView: TextView
     private lateinit var messageTextView: TextView
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -270,6 +263,7 @@ class MainActivity : AppCompatActivity() {
         inputCheckInDateEditText = findViewById(R.id.input_checkin_date)
         inputDateEntertainmentEditText = findViewById(R.id.input_date_entertainment)
         inputCityRestaurantEventEditText = findViewById(R.id.input_city_restaurant_event)
+        recommendationsText = findViewById(R.id.recommendations_text)
 
         loadRecoProfile()
 
@@ -1328,6 +1322,17 @@ class MainActivity : AppCompatActivity() {
         """.trimIndent()
         )
 
+        recommendationsText.text =
+            "Рекомендуемый город отправления: ${profile.recommendedDepartureCity?.value ?: "—"}, " +
+                    "время вылета: ${
+                        when (profile.preferredDepartureTime?.value) {
+                            "morning" -> "утро"
+                            "day" -> "день"
+                            "evening" -> "вечер"
+                            "night" -> "ночь"
+                            else -> profile.preferredDepartureTime?.value ?: "—"
+                        }
+                    }, авиакомпания: ${profile.favoriteAirline?.value?.let { getAirlineName(it) } ?: "—"}"
     }
 }
 private val mainHandler = Handler(Looper.getMainLooper())
