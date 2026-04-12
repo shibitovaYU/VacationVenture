@@ -19,6 +19,7 @@ import com.example.vacationventure.model.FlightSegment
 import com.example.vacationventure.model.dto.FlightFavorite.FlightFavoriteData
 import com.example.vacationventure.model.dto.recommendations.EventType
 import com.example.vacationventure.model.dto.recommendations.RecoProfileResponse
+import com.example.vacationventure.network.ranking.FlightRankingSender
 import com.example.vacationventure.network.recommendations.RecoProfileSender
 import com.google.firebase.database.*
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class FlightTicketsActivity : TicketsActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private val recoSender = RecoEventSender()
+    private val rankingSender = FlightRankingSender()
     private lateinit var recoTracker: RecoTracker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +53,7 @@ class FlightTicketsActivity : TicketsActivity() {
             recyclerView.visibility = View.GONE
         } else {
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = FlightAdapter(
-                flightResponse!!.segments,
-                onFavoriteClick = { segment, icon -> handleFavoriteClick(segment, icon) },
-                onBindFavoriteState = { segment, icon -> checkIfFavorite(segment, icon) },
-                onDetailsClick = {segment ->
-                    lifecycleScope.launch {
-                        recoTracker.sendRecoEvent(EventType.CLICK, segment)
-                    }
-                }
-            )
+            loadRankedFlights(flightResponse!!.segments)
         }
     }
     private fun safeFirebaseKey(raw: String): String {
@@ -172,5 +165,45 @@ class FlightTicketsActivity : TicketsActivity() {
         })
     }
 
+    private fun loadRankedFlights(flights: List<FlightSegment>) {
+        lifecycleScope.launch {
+            Log.d("FlightTicketsActivity", "Start ranking: flights=${flights.size}")
 
+            val rankingResponse = rankingSender.rankFlights(flights)
+
+            rankingResponse?.rankedFlights?.forEachIndexed { index, ranked ->
+                Log.d(
+                    "FlightTicketsActivity",
+                    "Ranked[$index]: rank=${ranked.rank}, score=${ranked.score}, " +
+                            "number=${ranked.flight.thread.number}, " +
+                            "from=${ranked.flight.from.code}, to=${ranked.flight.to.code}, " +
+                            "departure=${ranked.flight.departure}"
+                )
+            }
+
+            val rankedFlights = rankingResponse
+                ?.rankedFlights
+                ?.sortedBy { it.rank }
+                ?.map { it.flight }
+                ?: flights
+
+            Log.d("FlightTicketsActivity", "Ranking result: ${rankingResponse?.rankedFlights}")
+            Log.d("FlightTicketsActivity", "Flights to display: ${rankedFlights.size}")
+
+            renderFlights(rankedFlights)
+        }
+    }
+
+    private fun renderFlights(flights: List<FlightSegment>) {
+        recyclerView.adapter = FlightAdapter(
+            flights,
+            onFavoriteClick = { segment, icon -> handleFavoriteClick(segment, icon) },
+            onBindFavoriteState = { segment, icon -> checkIfFavorite(segment, icon) },
+            onDetailsClick = { segment ->
+                lifecycleScope.launch {
+                    recoTracker.sendRecoEvent(EventType.CLICK, segment)
+                }
+            }
+        )
+    }
 }
